@@ -1,9 +1,9 @@
 
-<umn-nav-page #navPage>
+<umn-nav-page #navPage (onToggleBackButton)="doSomething()">
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button (click)="navPage.pop('/portal-35/pageOne')">Close</ion-button>
+        <ion-button (click)="navPage.pop()">{{navPage.canGoBack()?'Baec':'Klous'}} </ion-button>
         <ion-button (click)="navPage.toggleWidth(); this.navPage.scrollIntoView()">SizePlus</ion-button>
       </ion-buttons>
       <umn-back-button></umn-back-button>

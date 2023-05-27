@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 @Component({
   selector: 'umn-page-two',
@@ -8,11 +8,14 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageTwoComponent implements OnInit {
-  page3 = "/portal-35/pageOne/pageTwo/pageThree"
+  page3 = "pageThree"
 
-  constructor() { }
+  constructor(private cdr:ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
 
+  doSomething() {
+    this.cdr.detectChanges();
+  }
 }

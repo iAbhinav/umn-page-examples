@@ -4,16 +4,19 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   Renderer2,
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { Router } from "@angular/router";
-import { AnimationController, NavController } from "@ionic/angular";
+import { ActivatedRoute, Router } from "@angular/router";
+import { NavController } from "@ionic/angular";
 import { DisplayService, rootAnimation } from "@umun-tech/core";
 import { contentWidthAnimation } from "./animations";
+import { UmunNavController } from "./UmunNavController";
 
 
 @Component({
@@ -33,28 +36,39 @@ export class NavPage implements OnInit, AfterViewInit {
   @Input() background = "";
   @Input() isRootPage = false;
   @ViewChild("containerRow", { read: ElementRef, static: false }) containerRow: ElementRef;
+  @Output() onToggleBackButton = new EventEmitter<boolean>();
   // @ViewChild("routerOutlet", { read: IonRouterOutlet, static: false }) routerOutlet: IonRouterOutlet;
   contentColWidth = "400px";
 
   isShowBackButton = false;
   breadCrumbs: string[];
   id: string;
+  private path: any;
+  private parentPath: any;
+
+  private basePath: any; //base = parent + path
 
   constructor(private renderer: Renderer2, private el: ElementRef,
               private cdr: ChangeDetectorRef,
               private router: Router,
               private display: DisplayService,
               private navController: NavController,
-              private animationCtrl: AnimationController) {
+              private umunNavContoller: UmunNavController,
+              private route: ActivatedRoute) {
     //random string
     this.id = Math.random().toString(36).substring(7);
     console.log(this.id);
+
 
   }
 
   ngAfterViewInit(): void {
     this.scrollIntoView();
+    this.setPaths()
 
+    this.isShowBackButton = this.canGoBack()
+    this.onToggleBackButton.emit(this.isShowBackButton)
+    this.cdr.detectChanges()
 
   }
 
@@ -73,7 +87,8 @@ export class NavPage implements OnInit, AfterViewInit {
 
 
   push(path: string, routerColWidth: string = "0px") {
-    this.navController.navigateForward(path).then(res => {
+    // this.setPaths()
+    this.navController.navigateForward(this.basePath+"/"+path).then(res => {
       this.routerColWidth = routerColWidth;
       this.scrollIntoView();
 
@@ -81,8 +96,23 @@ export class NavPage implements OnInit, AfterViewInit {
 
   }
 
-  pop(path) {
-    this.navController.navigateBack(path);
+  pop() {
+    console.log("submlings", this.umunNavContoller.findSiblings(this.path))
+    //popping closes all the other since we are moving to the parentpath
+    // this.umunNavContoller.pop(this.path)
+    console.log(this.umunNavContoller.getParentRoute(this.path))
+    let siblings = this.umunNavContoller.pop(this.path);
+
+    if(siblings?.length){
+      //todo: should open the fartherst child in the hierarchy
+      this.navController.navigateBack(siblings[siblings.length-1].basePath)
+    } else {
+      this.navController.navigateBack(this.parentPath)
+    }
+
+
+    // this.navController.navigateBack(this.parentPath);
+
     this.cdr.detectChanges();
   }
 
@@ -128,5 +158,38 @@ export class NavPage implements OnInit, AfterViewInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  setPaths() {
+    if (!this.route?.snapshot?.data?.path) {
+
+      throw new Error(`NavPageComponent: path is not defined in route data
+      example:
+      {
+        path: "pageOne",
+        component: PageOneComponent,
+        data: {
+          path: "pageOne"
+          }`);
+    }
+
+    this.path = this.route?.snapshot?.data?.path;
+    this.basePath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) + this.route?.snapshot?.data?.path?.length);
+    this.parentPath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) - 1);
+
+    let parent = this.umunNavContoller.push({
+      path: this.path,
+      basePath: this.basePath,
+      isRoot: this.isRootPage,
+      navPage: null,
+      parentPath: this.parentPath,
+      children: []
+    })
+    console.log("parent", parent)
+    this.cdr.detectChanges();
+  }
+
+  canGoBack(){
+    return this.umunNavContoller.findSiblings(this.path)?.length > 0
   }
 }

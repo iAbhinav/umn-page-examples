@@ -24,8 +24,8 @@ import { filter } from "rxjs/operators";
   ]
 })
 export class HomePortal implements OnInit {
-  page1: string = "/portal-35/pageOne";
-  page2= "/portal-35/pageTwo";
+  page1: string = "pageOne";
+  page2= "pageTwo";
 
   //very long array of lrem ipsum
   longArray = Array.from({length: 20}, (_, i) => i);

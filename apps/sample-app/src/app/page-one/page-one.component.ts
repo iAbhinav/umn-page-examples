@@ -1,4 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewEncapsulation
+} from "@angular/core";
 import { NavigationEnd, Router, Routes } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { PageTwoComponent } from "../page-two/page-two.component";
@@ -13,10 +20,13 @@ import { PageTwoComponent } from "../page-two/page-two.component";
 })
 export class PageOneComponent implements OnInit, AfterViewInit {
   // page1: any = "/portal-35/pageOne/pageOne";
-  page2 = "/portal-35/pageOne/pageTwo"
+  page2 = "pageTwo"
   longArray = Array.from({length: 20}, (_, i) => i);
-  constructor(private router: Router) { }
+  constructor(private cdr:ChangeDetectorRef) { }
 
+  doSomething() {
+    this.cdr.detectChanges();
+  }
   ngOnInit(): void {
     // console.log(pageOneRoutes)
   }
@@ -39,7 +49,10 @@ export const pageOneRoutes: Routes = [
       // },
       {
         path: "pageTwo",
-        loadChildren: () => import("../page-two/page-two.module").then(m => m.PageTwoModule)
+        loadChildren: () => import("../page-two/page-two.module").then(m => m.PageTwoModule),
+        data: {
+          path: "pageTwo"
+        }
       },
     ]
   }

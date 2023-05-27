@@ -23,6 +23,9 @@ const routes: Routes = [
         {
     path: __home,
     loadChildren: () => import("./portals/home/home.module").then(m => m.HomeModule),
+          data: {
+            path: __home
+          }
     // canLoad: [LoggedInGuard, OrganizationSelectedGuard],
     // canActivate: [OrganizationSelectedGuard]
   },

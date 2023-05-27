@@ -46,7 +46,7 @@ export class NavPage implements OnInit, AfterViewInit {
   private path: any;
   private parentPath: any;
 
-  private basePath: any; //base = parent + path
+  basePath: any; //base = parent + path
 
   constructor(private renderer: Renderer2, private el: ElementRef,
               private cdr: ChangeDetectorRef,

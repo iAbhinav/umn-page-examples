@@ -3,3 +3,7 @@ ion-content {
   //36px is the height of the footer
   height: calc(100vh - 44px - 36px);
 }
+
+.active {
+  color: var(--ion-color-primary);
+}

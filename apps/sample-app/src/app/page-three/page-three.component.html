@@ -1,0 +1,22 @@
+<umn-nav-page #navPage>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="navPage.pop('/portal-35/pageOne/pageTwo')">Close</ion-button>
+      </ion-buttons>
+      <umn-back-button></umn-back-button>
+      <ion-title>Page Three</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="ion-padding">
+      <p>
+        Welcome to the UMN Nav Demo. This is a demo of the UMN Nav component.
+      </p>
+    </div>
+
+    <ion-list [inset]="true">
+
+    </ion-list>
+  </ion-content>
+</umn-nav-page>

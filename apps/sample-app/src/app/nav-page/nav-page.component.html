@@ -1,0 +1,15 @@
+<div class="container-grid">
+  <div class="container-row" [class.top-row]="isRootPage" [@rootAnimation] [@enterLeftToRight]>
+    <div class="content-col"  #containerRow
+         [ngStyle]="{'flex-basis': contentColWidth}"
+         [ngStyle]="{'background':background}">
+      <ng-content></ng-content>
+    </div>
+    <div class="router-col" [id]="id" [ngStyle]="{'flex-basis': routerColWidth}" >
+
+            <router-outlet #routerOutlet></router-outlet>
+
+    </div>
+  </div>
+</div>
+

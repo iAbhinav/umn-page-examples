@@ -1,0 +1,34 @@
+<umn-nav-page #navPage>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="navPage.pop('/portal-35')">Close</ion-button>
+      </ion-buttons>
+      <ion-buttons slot="start">
+        <ion-back-button ></ion-back-button>
+      </ion-buttons>
+      <ion-title>Page One</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="ion-padding">
+      <p>
+        Page One
+      </p>
+    </div>
+
+    <ion-list [inset]="true">
+<!--      <ion-item-->
+
+<!--                (click)="navPage?.push(page1)" routerLinkActive="active" detail="true" button>-->
+<!--        <ion-label>Page 1</ion-label>-->
+<!--      </ion-item>-->
+      <ion-item
+
+                (click)="navPage?.push(page2)" routerLinkActive="active" detail="true" button>
+        <ion-label>Page 2</ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-item *ngFor="let i of longArray; let ind = index">{{ind+1}}</ion-item>
+  </ion-content>
+</umn-nav-page>

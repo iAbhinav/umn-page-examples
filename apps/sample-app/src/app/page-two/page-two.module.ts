@@ -18,7 +18,10 @@ import { PageThreeComponent } from "../page-three/page-three.component";
         children: [
           {
             path: "pageThree",
-            loadChildren: () => import("../page-three/page-three.module").then(m => m.PageThreeModule)
+            loadChildren: () => import("../page-three/page-three.module").then(m => m.PageThreeModule),
+            data: {
+              path: "pageThree"
+            }
           },
         ]
       }

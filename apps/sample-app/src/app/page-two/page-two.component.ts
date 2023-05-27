@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageTwoComponent implements OnInit {
-  page3 = "/portal-35/pageOne/pageTwo/pageThree"
+  page3 = "pageThree"
 
   constructor() { }
 

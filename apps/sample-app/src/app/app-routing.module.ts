@@ -2,10 +2,10 @@ import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { LoggedInGuard } from "@umun-tech/iam";
 import { OrganizationSelectedGuard } from "@umun-tech/organization";
-    import { EmployeeServiceResolver } from "@umun-tech/seminar-workspace-57";
-    import { TaskServiceResolver } from "@umun-tech/seminar-workspace-57";
+import { EmployeeServiceResolver } from "@umun-tech/seminar-workspace-57";
+import { TaskServiceResolver } from "@umun-tech/seminar-workspace-57";
 
-    export const __home = "portal-35";
+export const __home = "portal-35";
 export const _home_ = `/${__home}`;
 
 
@@ -20,13 +20,14 @@ export const _select_organization_ = `/${__select_organization}`;
 
 const routes: Routes = [
 
-        {
+  {
     path: __home,
     loadChildren: () => import("./portals/home/home.module").then(m => m.HomeModule),
-    // canLoad: [LoggedInGuard, OrganizationSelectedGuard],
-    // canActivate: [OrganizationSelectedGuard]
+    data: {
+      path: __home
+    }
   },
- {
+  {
     path: __login,
     loadChildren: () => import("@umun-tech/iam").then(m => m.LoginPageModule)
   },
@@ -54,8 +55,8 @@ const routes: Routes = [
     canLoad: [LoggedInGuard, OrganizationSelectedGuard],
     canActivate: [OrganizationSelectedGuard],
     resolve: {
-            Task: TaskServiceResolver,
-            Employee: EmployeeServiceResolver,
+      Task: TaskServiceResolver,
+      Employee: EmployeeServiceResolver
     }
   },
   {

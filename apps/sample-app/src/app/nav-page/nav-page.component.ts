@@ -3,16 +3,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, Input,
+  ElementRef,
+  Input,
   OnInit,
-  Renderer2, ViewChild,
+  Renderer2,
+  ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { Router, RouterOutlet } from "@angular/router";
-import { AnimationController, IonRouterOutlet, NavController } from "@ionic/angular";
+import { ActivatedRoute, Router } from "@angular/router";
+import { AnimationController, NavController } from "@ionic/angular";
 import { DisplayService, rootAnimation } from "@umun-tech/core";
-import { animate, style, transition, trigger } from "@angular/animations";
-import { enterLeftToRight } from "./animations";
+import { contentWidthAnimation, enterLeftToRight } from "./animations";
 
 
 @Component({
@@ -23,7 +24,8 @@ import { enterLeftToRight } from "./animations";
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     enterLeftToRight,
-    rootAnimation
+    rootAnimation,
+    contentWidthAnimation
   ]
 })
 export class NavPage implements OnInit, AfterViewInit {
@@ -36,58 +38,64 @@ export class NavPage implements OnInit, AfterViewInit {
   contentColWidth = "400px";
 
   isShowBackButton = false;
-   breadCrumbs: string[];
-  id: string;
+  breadCrumbs: string[];
+  basePath: string = "";
+  parentPath: string;
+  private path: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
               private cdr: ChangeDetectorRef,
               private router: Router,
               private display: DisplayService,
               private navController: NavController,
-              private animationCtrl: AnimationController) {
-    //random string
-    this.id = Math.random().toString(36).substring(7);
-    console.log(this.id)
+              private animationCtrl: AnimationController,
+              private route: ActivatedRoute) {
+
 
   }
 
   ngAfterViewInit(): void {
-    this.scrollIntoView(100);
+    this.scrollIntoView();
 
-
-    }
+  }
 
 
   ngOnInit(): void {
+    this.setBasePath();
 //on url change
-    if(this.isRootPage) {
+    if (this.isRootPage) {
       this.router.events.subscribe((val) => {
 
         this.breadCrumbs = this.router.url.split("/").filter(x => x !== "");
         // console.log(this.router.url, this.breadCrumbs)
 
-      })
+      });
     }
   }
 
 
   push(path: string, routerColWidth: string = "0px") {
-    this.navController.navigateForward(path).then(res => {
+    this.setBasePath()
+    console.log(this.basePath +"/"+ path);
+    this.navController.navigateForward(this.basePath +"/"+ path).then(res => {
       this.routerColWidth = routerColWidth;
-     this.scrollIntoView(700);
+      this.scrollIntoView();
 
     });
+
 
   }
 
   pop(path) {
-    this.navController.navigateBack(path);
+    this.navController.navigateBack(this.parentPath);
+    // this.umunNavController.pop(this.path)
     this.cdr.detectChanges();
   }
 
   toggleWidth() {
     if (this.contentColWidth === "400px") {
       this.contentColWidth = "800px";
+      this.scrollIntoView();
     } else {
       this.contentColWidth = "400px";
     }
@@ -95,13 +103,14 @@ export class NavPage implements OnInit, AfterViewInit {
   }
 
   private toggleBackButton() {
-    this.isShowBackButton = !this.isShowBackButton
+    this.isShowBackButton = !this.isShowBackButton;
   }
 
-   scrollIntoView(animationDuration: number = 700) {
+  scrollIntoView() {
+    let animationDuration: number = 250;
     setTimeout(() => {
 
-      const parentElement = document.querySelector('.top-row') as HTMLElement;
+      const parentElement = document.querySelector(".top-row") as HTMLElement;
       if (parentElement) {
         const scrollAmount = parentElement.scrollWidth - parentElement.clientWidth;
         const startTime = performance.now();
@@ -125,6 +134,37 @@ export class NavPage implements OnInit, AfterViewInit {
         requestAnimationFrame(scrollAnimation);
         this.cdr.detectChanges();
       }
-    })
+    });
+  }
+
+  private setBasePath() {
+    if (!this.route?.snapshot?.data?.path) {
+
+      throw new Error(`NavPageComponent: path is not defined in route data
+      example:
+      {
+        path: "pageOne",
+        component: PageOneComponent,
+        data: {
+          path: "pageOne"
+          }`);
+    }
+
+    this.path = this.route?.snapshot?.data?.path;
+    this.basePath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) + this.route?.snapshot?.data?.path?.length);
+    this.parentPath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) - 1);
+
+    console.log("Set base base", this.path, this.basePath, this.parentPath)
+
+    // let parent = this.umunNavController.push({
+    //   path: this.path,
+    //   basePath: this.basePath,
+    //   isRoot: this.isRootPage,
+    //   navPage: null,
+    //   parentPath: this.parentPath,
+    //   children: []
+    // })
+    // console.log("parent", parent)
+    this.cdr.detectChanges();
   }
 }

@@ -13,7 +13,7 @@ import { PageTwoComponent } from "../page-two/page-two.component";
 })
 export class PageOneComponent implements OnInit, AfterViewInit {
   // page1: any = "/portal-35/pageOne/pageOne";
-  page2 = "/portal-35/pageOne/pageTwo"
+  page2 = "pageTwo"
   longArray = Array.from({length: 20}, (_, i) => i);
   constructor(private router: Router) { }
 
@@ -39,7 +39,10 @@ export const pageOneRoutes: Routes = [
       // },
       {
         path: "pageTwo",
-        loadChildren: () => import("../page-two/page-two.module").then(m => m.PageTwoModule)
+        loadChildren: () => import("../page-two/page-two.module").then(m => m.PageTwoModule),
+        data: {
+          path: "pageTwo"
+        }
       },
     ]
   }

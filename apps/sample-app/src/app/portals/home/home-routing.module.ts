@@ -15,11 +15,17 @@ export const routes: Routes = [
     children: [
       {
         path: "pageOne",
-        loadChildren: () => import("./../../page-one/page-one.module").then(m => m.PageOneModule)
+        loadChildren: () => import("./../../page-one/page-one.module").then(m => m.PageOneModule),
+        data: {
+          path: "pageOne"
+        }
       },
       {
         path: "pageTwo",
-        loadChildren: () => import("./../../page-two/page-two.module").then(m => m.PageTwoModule)
+        loadChildren: () => import("./../../page-two/page-two.module").then(m => m.PageTwoModule),
+        data: {
+          path: "pageTwo"
+        }
       },
       {
         path: `${employee_entity_name}/:entityName`,

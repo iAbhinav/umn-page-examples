@@ -3,8 +3,8 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button (click)="navPage.pop('/portal-35/pageOne')">Close</ion-button>
-        <ion-button (click)="navPage.toggleWidth(); this.navPage.scrollIntoView()">SizePlus</ion-button>
+        <ion-button (click)="navPage.pop('/portal-35/pageOne')">{{navPage?.isShowBackButton ? "Bac":"clous"}}</ion-button>
+        <ion-button (click)="navPage.toggleWidth();">SizePlus</ion-button>
       </ion-buttons>
       <umn-back-button></umn-back-button>
       <ion-title>Page Two</ion-title>

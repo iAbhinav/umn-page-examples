@@ -2,7 +2,7 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button (click)="navPage.pop('/portal-35')">Close</ion-button>
+        <ion-button (click)="navPage.pop('/portal-35')">{{navPage?.isShowBackButton ? "Bac":"clous"}}</ion-button>
       </ion-buttons>
       <ion-buttons slot="start">
         <ion-back-button ></ion-back-button>

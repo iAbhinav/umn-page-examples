@@ -3,16 +3,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, Input,
+  ElementRef,
+  Input,
   OnInit,
-  Renderer2, ViewChild,
+  Renderer2,
+  ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { Router, RouterOutlet } from "@angular/router";
-import { AnimationController, IonRouterOutlet, NavController } from "@ionic/angular";
+import { Router } from "@angular/router";
+import { AnimationController, NavController } from "@ionic/angular";
 import { DisplayService, rootAnimation } from "@umun-tech/core";
-import { animate, style, transition, trigger } from "@angular/animations";
-import { enterLeftToRight } from "./animations";
+import { contentWidthAnimation } from "./animations";
 
 
 @Component({
@@ -22,8 +23,8 @@ import { enterLeftToRight } from "./animations";
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    enterLeftToRight,
-    rootAnimation
+    rootAnimation,
+    contentWidthAnimation
   ]
 })
 export class NavPage implements OnInit, AfterViewInit {
@@ -36,7 +37,7 @@ export class NavPage implements OnInit, AfterViewInit {
   contentColWidth = "400px";
 
   isShowBackButton = false;
-   breadCrumbs: string[];
+  breadCrumbs: string[];
   id: string;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -47,26 +48,26 @@ export class NavPage implements OnInit, AfterViewInit {
               private animationCtrl: AnimationController) {
     //random string
     this.id = Math.random().toString(36).substring(7);
-    console.log(this.id)
+    console.log(this.id);
 
   }
 
   ngAfterViewInit(): void {
-    this.scrollIntoView(100);
+    this.scrollIntoView();
 
 
-    }
+  }
 
 
   ngOnInit(): void {
 //on url change
-    if(this.isRootPage) {
+    if (this.isRootPage) {
       this.router.events.subscribe((val) => {
 
         this.breadCrumbs = this.router.url.split("/").filter(x => x !== "");
         // console.log(this.router.url, this.breadCrumbs)
 
-      })
+      });
     }
   }
 
@@ -74,7 +75,7 @@ export class NavPage implements OnInit, AfterViewInit {
   push(path: string, routerColWidth: string = "0px") {
     this.navController.navigateForward(path).then(res => {
       this.routerColWidth = routerColWidth;
-     this.scrollIntoView(700);
+      this.scrollIntoView();
 
     });
 
@@ -95,13 +96,14 @@ export class NavPage implements OnInit, AfterViewInit {
   }
 
   private toggleBackButton() {
-    this.isShowBackButton = !this.isShowBackButton
+    this.isShowBackButton = !this.isShowBackButton;
   }
 
-   scrollIntoView(animationDuration: number = 700) {
+  scrollIntoView() {
+    let animationDuration: number = 250;
     setTimeout(() => {
 
-      const parentElement = document.querySelector('.top-row') as HTMLElement;
+      const parentElement = document.querySelector(".top-row") as HTMLElement;
       if (parentElement) {
         const scrollAmount = parentElement.scrollWidth - parentElement.clientWidth;
         const startTime = performance.now();
@@ -125,6 +127,6 @@ export class NavPage implements OnInit, AfterViewInit {
         requestAnimationFrame(scrollAnimation);
         this.cdr.detectChanges();
       }
-    })
+    });
   }
 }

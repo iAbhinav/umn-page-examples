@@ -66,7 +66,10 @@ export class UmunNavController {
 
   pop(path: any) {
     let siblings = this.findSiblings(path);
-    this.getParentRoute(path).children = siblings
+    if(this.getParentRoute(path)){
+      this.getParentRoute(path).children = siblings
+    }
+
     return siblings;
   }
 }

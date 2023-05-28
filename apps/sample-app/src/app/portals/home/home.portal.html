@@ -13,13 +13,13 @@
 
     <ion-list [inset]="true">
       <ion-item
-      routerLink="{{navPage.basePath+'/'+page1}}"
+      routerLink="{{navPage.navRoute.basePath+'/'+page1}}"
         (click)="navPage.push(page1)" [routerLinkActiveOptions]="{exact: false}"
         routerLinkActive="active" detail="true" button>
         <ion-label>Page 1</ion-label>
       </ion-item>
       <ion-item
-        routerLink="{{navPage.basePath+'/'+page2}}"
+        routerLink="{{navPage.navRoute.basePath+'/'+page2}}"
         (click)="navPage.push(page2)" [routerLinkActiveOptions]="{exact: false}"
         routerLinkActive="active" detail="true" button>
         <ion-label>Page 2</ion-label>

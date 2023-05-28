@@ -42,11 +42,12 @@ export class NavPage implements OnInit, AfterViewInit {
 
   isShowBackButton = false;
   breadCrumbs: string[];
-  id: string;
-  private path: any;
-  private parentPath: any;
 
-  basePath: any; //base = parent + path
+  navRoute = {
+    path: undefined,
+    parentPath: undefined,
+    basePath: undefined  //base = parent + path
+  }
 
   constructor(private renderer: Renderer2, private el: ElementRef,
               private cdr: ChangeDetectorRef,
@@ -55,11 +56,6 @@ export class NavPage implements OnInit, AfterViewInit {
               private navController: NavController,
               private umunNavContoller: UmunNavController,
               private route: ActivatedRoute) {
-    //random string
-    this.id = Math.random().toString(36).substring(7);
-    console.log(this.id);
-
-
   }
 
   ngAfterViewInit(): void {
@@ -88,7 +84,7 @@ export class NavPage implements OnInit, AfterViewInit {
 
   push(path: string, routerColWidth: string = "0px") {
     // this.setPaths()
-    this.navController.navigateForward(this.basePath+"/"+path).then(res => {
+    this.navController.navigateForward(this.navRoute.basePath+"/"+path).then(res => {
       this.routerColWidth = routerColWidth;
       this.scrollIntoView();
 
@@ -97,17 +93,16 @@ export class NavPage implements OnInit, AfterViewInit {
   }
 
   pop() {
-    console.log("submlings", this.umunNavContoller.findSiblings(this.path))
     //popping closes all the other since we are moving to the parentpath
     // this.umunNavContoller.pop(this.path)
-    console.log(this.umunNavContoller.getParentRoute(this.path))
-    let siblings = this.umunNavContoller.pop(this.path);
+    console.log(this.umunNavContoller.getParentRoute(this.navRoute.path))
+    let siblings = this.umunNavContoller.pop(this.navRoute.path);
 
     if(siblings?.length){
       //todo: should open the fartherst child in the hierarchy
       this.navController.navigateBack(siblings[siblings.length-1].basePath)
     } else {
-      this.navController.navigateBack(this.parentPath)
+      this.navController.navigateBack(this.navRoute.parentPath)
     }
 
 
@@ -173,23 +168,22 @@ export class NavPage implements OnInit, AfterViewInit {
           }`);
     }
 
-    this.path = this.route?.snapshot?.data?.path;
-    this.basePath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) + this.route?.snapshot?.data?.path?.length);
-    this.parentPath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) - 1);
+    this.navRoute.path = this.route?.snapshot?.data?.path;
+    this.navRoute.basePath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) + this.route?.snapshot?.data?.path?.length);
+    this.navRoute.parentPath = this.router.url.substr(0, this.router.url.indexOf(this.route?.snapshot?.data?.path) - 1);
 
     let parent = this.umunNavContoller.push({
-      path: this.path,
-      basePath: this.basePath,
+      path: this.navRoute.path,
+      basePath: this.navRoute.basePath,
       isRoot: this.isRootPage,
       navPage: null,
-      parentPath: this.parentPath,
+      parentPath: this.navRoute.parentPath,
       children: []
     })
-    console.log("parent", parent)
     this.cdr.detectChanges();
   }
 
   canGoBack(){
-    return this.umunNavContoller.findSiblings(this.path)?.length > 0
+    return this.umunNavContoller.findSiblings(this.navRoute.path)?.length > 0
   }
 }

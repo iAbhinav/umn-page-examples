@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { PlayNowComponent } from "./play-now.component";
 import { CoreModule } from "@umun-tech/core";
+import { PageModule } from "../../page/page.module";
 
 @NgModule({
   imports: [
@@ -16,8 +17,8 @@ import { CoreModule } from "@umun-tech/core";
         component: PlayNowComponent,
         children: [
           {
-            path: '',
-            loadChildren: ()=> import('./../empty/empty.module').then(m=>m.EmptyModule)
+            path: "",
+            loadChildren: () => import("./../empty/empty.module").then(m => m.EmptyModule)
           },
           {
             path: "heydio",
@@ -29,7 +30,8 @@ import { CoreModule } from "@umun-tech/core";
           }
         ]
       }
-    ])
+    ]),
+    PageModule
   ],
   declarations: [
     PlayNowComponent

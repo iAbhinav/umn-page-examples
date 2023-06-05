@@ -3,19 +3,27 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-seydio",
   template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons>
-          <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-title>
-          sey
-        </ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      Hi I am seydio
-    </ion-content>
+    <umn-page #page>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons>
+            <umn-back></umn-back>
+          </ion-buttons>
+          <ion-title>
+            sey
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        Hi I am seydio
+
+        <ion-item [routerLink]="page.parentPath+ '/deydio'" routerLinkActive="active"
+
+                  queryParamsHandling="merge">
+          Deydio
+        </ion-item>
+      </ion-content>
+    </umn-page>
   `
 })
 export class SeydioComponent {

@@ -1,0 +1,4 @@
+
+  <ion-back-button [hidden]="backVisible" routerLink="../" queryParamsHandling="preserve"
+                   (click)="backClicked()"></ion-back-button>
+  <ion-back-button *ngIf="backVisible" (click)="backClicked()"></ion-back-button>

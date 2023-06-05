@@ -1,0 +1,23 @@
+<div class="desktop row ion-nowrap" *ngIf="!isMobile" [class.top-row]="isRootPage">
+  <ion-col class=" content">
+    <div  class="ion-page"  [class.can-go-back]="true">
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+    </div>
+  </ion-col>
+  <ion-col class="outlet">
+    <ion-router-outlet #outlet ></ion-router-outlet>
+  </ion-col>
+</div>
+
+<ion-row class="mobile row ion-nowrap" *ngIf="isMobile">
+  <div id="gggg" [class.ion-page]="!showOutlet" [class.can-go-back]="true" [hidden]="showOutlet">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </div>
+  <div [hidden]="!showOutlet">
+    <ion-router-outlet #outlet></ion-router-outlet>
+  </div>
+</ion-row>
+
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>

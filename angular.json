@@ -1,7 +1,149 @@
 {
   "version": 1,
   "projects": {
-             "sample-app": {
+    "mobile-nav": {
+      "projectType": "application",
+      "root": "apps/mobile-nav",
+      "sourceRoot": "apps/mobile-nav/src",
+      "prefix": "umn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/mobile-nav",
+            "index": "apps/mobile-nav/src/index.html",
+            "main": "apps/mobile-nav/src/main.ts",
+            "polyfills": "apps/mobile-nav/src/polyfills.ts",
+            "tsConfig": "apps/mobile-nav/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/mobile-nav/src/favicon.ico",
+              "apps/mobile-nav/src/assets",
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
+            ],
+            "styles": [
+              "apps/mobile-nav/src/styles.scss",
+              {
+                "input": "apps/mobile-nav/src/theme/variables.scss"
+              }
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/mobile-nav/src/environments/environment.ts",
+                  "with": "apps/mobile-nav/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "mobile-nav:build:production"
+            },
+            "development": {
+              "browserTarget": "mobile-nav:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mobile-nav:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/mobile-nav/src/**/*.ts",
+              "apps/mobile-nav/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/mobile-nav"
+          ],
+          "options": {
+            "jestConfig": "apps/mobile-nav/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "mobile-nav-e2e": {
+      "root": "apps/mobile-nav-e2e",
+      "sourceRoot": "apps/mobile-nav-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/mobile-nav-e2e/cypress.json",
+            "devServerTarget": "mobile-nav:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mobile-nav:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "options": {
+            "lintFilePatterns": [
+              "apps/mobile-nav-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": [
+        "mobile-nav"
+      ]
+    },
+    "sample-app": {
       "projectType": "application",
       "root": "apps/sample-app",
       "sourceRoot": "apps/sample-app/src",
@@ -98,7 +240,7 @@
       },
       "tags": []
     },
-        "sample-lib": {
+    "sample-lib": {
       "projectType": "library",
       "root": "libs/sample-lib",
       "sourceRoot": "libs/sample-lib/src",
@@ -134,6 +276,5 @@
       },
       "tags": []
     }
-
   }
 }

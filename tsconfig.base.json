@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "allowJs": true,
     "paths": {
-              "@umun-tech/seminar-workspace-57": [
+      "@umun-tech/seminar-workspace-57": [
         "libs/sample-lib/src/index.ts"
       ]
     }

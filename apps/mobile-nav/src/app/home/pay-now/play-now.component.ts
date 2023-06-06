@@ -36,7 +36,9 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
                   queryParamsHandling="merge">
           Heydio
         </ion-item>
-        <ion-item [routerLink]="page.contentPath +  '/seydio'" routerLinkActive="active" queryParamsHandling="merge">
+        <ion-item [routerLink]="page.contentPath +  '/seydio'"
+                  [queryParams]="{ stationName: 'Heydio'}"
+                  routerLinkActive="active" queryParamsHandling="merge">
           Seydio
         </ion-item>
 

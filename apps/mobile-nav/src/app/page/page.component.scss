@@ -14,12 +14,6 @@
     flex-grow: 0;
     flex-basis: 400px;
     border-right: 1px solid var(--ion-color-light);
-    border: 4px solid blue;
-  }
-
-  .outlet {
-    border-right: 2px green solid;
-
   }
 
   ion-router-outlet {
@@ -31,5 +25,4 @@
 
 .top-row {
   overflow-x: auto;
-  border-right: 2px red solid;
 }

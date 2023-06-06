@@ -1,6 +1,6 @@
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   ContentChild, ContentChildren, HostListener,
   OnInit, QueryList,
@@ -24,18 +24,22 @@ export class PortalComponent implements AfterContentInit {
   isTablet?: boolean;
   isDesktop?: boolean;
 
-  constructor(private display: DisplayService) {
-    this.onScreenSizeChange()
+  constructor(private display: DisplayService,
+              private cdr: ChangeDetectorRef) {
+
   }
 
   @HostListener('window:resize', ['$event'])
   onScreenSizeChange() {
     this.isMobile = this.display.isSmall;
     this.isTablet = this.display.isMedium && this.display.isTouchDevice;
-    this.isDesktop = !this.isMobile && !this.isTablet;
+    this.isDesktop = !this.isMobile || this.isTablet;
+    console.log(this.isMobile, this.isDesktop, this.isTablet)
+    this.cdr.detectChanges()
   }
 
   ngAfterContentInit() {
+    this.onScreenSizeChange()
     if (this.navItems)
       this.navItems.forEach(navItem => {
         if(navItem){

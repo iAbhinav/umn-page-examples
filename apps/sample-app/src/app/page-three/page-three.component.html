@@ -1,22 +1,26 @@
-<umn-nav-page #navPage>
+
+<umn-nav-page #navPage >
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button (click)="navPage.pop()">Close</ion-button>
+        <ion-button (click)="navPage.pop()">{{navPage.canGoBack()?'Baec':'Klous'}} </ion-button>
+        <ion-button (click)="navPage.toggleWidth(); this.navPage.scrollIntoView()">SizePlus</ion-button>
       </ion-buttons>
       <umn-back-button></umn-back-button>
       <ion-title>Page Three</ion-title>
     </ion-toolbar>
   </ion-header>
+
   <ion-content>
     <div class="ion-padding">
-      <p>
-        Welcome to the UMN Nav Demo. This is a demo of the UMN Nav component.
-      </p>
     </div>
 
     <ion-list [inset]="true">
-
+      <ion-item (click)="navPage.push(page3)"
+                routerLink="{{navPage.navRoute.basePath+'/'+page3}}"
+                routerLinkActive="active" detail="true" button>
+        <ion-label>Page 4</ion-label>
+      </ion-item>
     </ion-list>
   </ion-content>
 </umn-nav-page>

@@ -2,40 +2,45 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, Input,
   OnInit,
   ViewEncapsulation
 } from "@angular/core";
 
 @Component({
-  selector: 'umn-back',
-  templateUrl: './back.component.html',
-  styleUrls: ['./back.component.scss'],
+  selector: "umn-back",
+  templateUrl: "./back.component.html",
+  styleUrls: ["./back.component.scss"],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackComponent implements AfterViewInit {
 
+  @Input() showCustomBack = true;
+  @Input() reloadWindowOnCustomBack = false;
 
-  backVisible: boolean = false;
+  parentPath? = "../";
+  ionBackVisible: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {
   }
-  ngAfterViewInit() {
 
+  ngAfterViewInit() {
     const ionBackButton = document.querySelector("ion-back-button");
     // @ts-ignore
-    var icon = ionBackButton.shadowRoot.querySelector("button > span > ion-icon");
-    this.backVisible = icon != undefined;
-this.cdr.detectChanges()
+    var icon = ionBackButton?.shadowRoot?.querySelector("button > span > ion-icon");
+    this.ionBackVisible = icon != undefined;
+    this.cdr.detectChanges();
   }
 
   backClicked() {
-    if (this.backVisible) {
-      console.log("back clicked: Through ionic back button");
-    } else {
+    if (!this.ionBackVisible) {
       console.log("back clicked: Through custom Close button");
-
+      if(this.reloadWindowOnCustomBack){
+        setTimeout(() => {
+            window.location.reload();
+        });
+      }
       //either add
       // {
       //   path: '',
@@ -46,9 +51,7 @@ this.cdr.detectChanges()
       //maybe create a boolean with allows user to choose between the two
       //ion-router-outlet wont allow you to navigate to the same route
       //and router-outlet wont give you animations and gestures that ionic has for a page
-      setTimeout(() => {
-        window.location.reload();
-      });
+      //
     }
 
 

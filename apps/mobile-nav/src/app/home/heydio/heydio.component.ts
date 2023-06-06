@@ -3,8 +3,8 @@ import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from "@ang
 @Component({
   selector: "app-heydio",
   template: `
-   
-    
+
+
     <umn-page #page>
       <ion-header [translucent]="true">
         <ion-toolbar>
@@ -25,7 +25,7 @@ import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from "@ang
           </ion-toolbar>
         </ion-header>
         Hi I am Heydio
-        <ion-item [routerLink]="page.parentPath+ '/deydio'" routerLinkActive="active"
+        <ion-item [routerLink]="page.contentPath+ '/deydio'" routerLinkActive="active"
 
                   queryParamsHandling="merge">
           Deydio

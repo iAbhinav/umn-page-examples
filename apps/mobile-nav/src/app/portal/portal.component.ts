@@ -36,13 +36,11 @@ export class PortalComponent implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    console.log(this.navBar);  // this should be the UmNavBarComponent instance
     if (this.navItems)
       this.navItems.forEach(navItem => {
         if(navItem){
           navItem.portal = this;
         }
-        console.log(navItem);  // these should be the UmNavItemComponent instances
       });
   }
 }

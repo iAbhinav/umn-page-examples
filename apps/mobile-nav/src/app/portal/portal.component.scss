@@ -47,14 +47,6 @@
     }
   }
 
-  .outlet {
-  }
-
-  ion-router-outlet {
-    /* Assuming you want the router outlet to scroll if content overflows */
-    overflow-y: auto;
-
-  }
 
   .active {
     --color: var(--ion-color-primary);

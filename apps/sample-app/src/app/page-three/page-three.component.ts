@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageThreeComponent implements OnInit {
-  page3: any = 'nav-page';
+  page3: any = 'four';
 
   constructor() { }
 

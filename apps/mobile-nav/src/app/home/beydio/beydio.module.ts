@@ -2,8 +2,8 @@ import { NgModule } from "@angular/core";
 import { IonicModule } from "@ionic/angular";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
-import { DeydioComponent } from "./deydio.component";
 import { PageModule } from "../../page/page.module";
+import { BeydioComponent } from "./beydio.component";
 
 @NgModule({
   imports: [
@@ -12,19 +12,15 @@ import { PageModule } from "../../page/page.module";
     RouterModule.forChild([
       {
         path: "",
-        component: DeydioComponent,
+        component: BeydioComponent,
         children: [
           {
             path: "",
             loadChildren: () => import("./../empty/empty.module").then(m => m.EmptyModule)
           },
-          // {
-          //   path: "deydio",
-          //   loadChildren: () => DeydioModule
-          // },
           {
-            path: "xeydio",
-            loadChildren: () => import('./../xeydio/xeydio.module').then(m=> m.XeydioModule)
+            path: "aeydio",
+            loadChildren: () => import('./../aeydio/aeydio.module').then(m=> m.AeydioModule)
           },
         ]
 
@@ -33,12 +29,12 @@ import { PageModule } from "../../page/page.module";
     PageModule
   ],
   declarations: [
-    DeydioComponent
+    BeydioComponent
     ],
   exports: [
     RouterModule
   ]
 })
-export class DeydioModule {
+export class BeydioModule {
 
 }

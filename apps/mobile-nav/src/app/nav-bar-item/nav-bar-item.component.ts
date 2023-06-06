@@ -35,7 +35,6 @@ export class NavBarItemComponent implements OnInit {
     this._portal = portal;
     if(portal && this.parentPath) {
       this.childRoute = this.parentPath + this.path;
-      console.log(this.childRoute)
     }
   }
 

@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, ElementRef } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-deydio",
+  selector: "app-xeydio",
   template: `
     <umn-page #page>
       <ion-header>
@@ -11,22 +10,22 @@ import { Router } from "@angular/router";
             <umn-back></umn-back>
           </ion-buttons>
           <ion-title>
-            Dey
+            Xey
           </ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
-        Hi I am deydio
+        Hi I am Xeydio
 
-        <ion-item [routerLink]="page.contentPath+ '/xeydio'" routerLinkActive="active"
+        <ion-item [routerLink]="page.contentPath+ '/beydio'" routerLinkActive="active"
 
                   queryParamsHandling="merge">
-          Xeydio
+          Beydio
         </ion-item>
       </ion-content>
     </umn-page>
   `
 })
-export class DeydioComponent {
+export class XeydioComponent {
 
 }

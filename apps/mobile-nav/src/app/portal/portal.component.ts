@@ -1,14 +1,17 @@
 import {
   AfterContentInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  ContentChild, ContentChildren, HostListener,
-  OnInit, QueryList,
+  ContentChild,
+  ContentChildren,
+  HostListener,
+  QueryList,
   ViewEncapsulation
 } from "@angular/core";
 import { NavBarComponent } from "../nav-bar/nav-bar.component";
 import { NavBarItemComponent } from "../nav-bar-item/nav-bar-item.component";
-import { DisplayService } from "@umun-tech/core";
+import { PageHelper } from "../page/services/page-helper.service";
 
 @Component({
   selector: "umn-portal",
@@ -21,20 +24,17 @@ export class PortalComponent implements AfterContentInit {
   @ContentChild(NavBarComponent) navBar?: NavBarComponent;
   @ContentChildren(NavBarItemComponent, { descendants: true }) navItems?: QueryList<NavBarItemComponent>;
   isMobile?: boolean;
-  isTablet?: boolean;
   isDesktop?: boolean;
 
-  constructor(private display: DisplayService,
+  constructor(private pageHelper: PageHelper,
               private cdr: ChangeDetectorRef) {
 
   }
 
   @HostListener('window:resize', ['$event'])
   onScreenSizeChange() {
-    this.isMobile = this.display.isSmall;
-    this.isTablet = this.display.isMedium && this.display.isTouchDevice;
-    this.isDesktop = !this.isMobile || this.isTablet;
-    console.log(this.isMobile, this.isDesktop, this.isTablet)
+    this.isMobile = this.pageHelper.isMobile;
+    this.isDesktop = !this.isMobile
     this.cdr.detectChanges()
   }
 

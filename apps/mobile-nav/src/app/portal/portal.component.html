@@ -2,6 +2,7 @@
   <div class="side-bar">
     <ion-item *ngFor="let item of navItems" detail="none" lines="none" detailIcon=""
               [routerLink]="item?.childRoute" routerLinkActive="active" [queryParams]="item.params"
+              queryParamsHandling="merge"
               [routerLinkActiveOptions]="{exact: false}">
       <ion-icon slot="start" [name]="item?.icon"></ion-icon>
       <ion-label>{{item?.label}}</ion-label>

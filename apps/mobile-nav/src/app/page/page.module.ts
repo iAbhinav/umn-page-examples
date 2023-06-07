@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { PageComponent } from "./page.component";
 import { CoreModule } from "@umun-tech/core";
 import { BackComponent } from "./back/back.component";
+import { PathDirective } from "./directives/path.directive";
 
 @NgModule({
   imports: [
@@ -15,11 +16,13 @@ import { BackComponent } from "./back/back.component";
   ],
   exports: [
     PageComponent,
-    BackComponent
+    BackComponent,
+    PathDirective
   ],
   declarations: [
     PageComponent,
-    BackComponent
+    BackComponent,
+    PathDirective
   ]
 })
 export class PageModule {

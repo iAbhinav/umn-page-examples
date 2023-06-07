@@ -25,7 +25,11 @@ import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from "@ang
           </ion-toolbar>
         </ion-header>
         Hi I am Heydio
-        <ion-item [routerLink]="page.contentPath+ '/deydio'" routerLinkActive="active"
+<!--        [routerLink]="page.contentPath+ '/deydio'"-->
+<!--        (click)="page.push('deydio', $event)"-->
+        <ion-item 
+                  path="deydio"
+                  routerLinkActive="active"
 
                   queryParamsHandling="merge">
           Deydio

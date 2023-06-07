@@ -7,7 +7,6 @@ import { ActivatedRoute } from "@angular/router";
     <umn-portal>
       <umn-nav-bar>
         <umn-nav-bar-item label="Play Now"
-                          [params]="{stationId: '1'}"
                           path="play-now" icon="play-circle">
         </umn-nav-bar-item>
         <umn-nav-bar-item label="Radio" path="radio" icon="radio">

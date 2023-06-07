@@ -31,13 +31,14 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
       </ion-header>
       <ion-content>
         Hi I am PlayNow
-        <ion-item [routerLink]="page.contentPath + '/heydio'" routerLinkActive="active"
-                  [queryParams]="{ stationName: 'Heydio'}"
+<!--        [routerLink]="page.contentPath + '/heydio'"-->
+<!--        [queryParams]="{ stationName: 'Heydio'}"-->
+        <ion-item  routerLinkActive="active" path="heydio"
+                  
                   queryParamsHandling="merge">
           Heydio
         </ion-item>
-        <ion-item [routerLink]="page.contentPath +  '/seydio'"
-                  [queryParams]="{ stationName: 'Heydio'}"
+        <ion-item path="seydio"
                   routerLinkActive="active" queryParamsHandling="merge">
           Seydio
         </ion-item>

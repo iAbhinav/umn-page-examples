@@ -1,13 +1,10 @@
-<!--<ion-back-button *ngIf="showCustomBack"-->
-<!--                 [hidden]="backVisible"-->
-<!--                 routerLink="../"-->
-<!--                 queryParamsHandling="preserve"-->
-<!--                 (click)="backClicked()" ></ion-back-button>-->
-
-<ion-button [routerLink]="parentPath" *ngIf="!ionBackVisible" [hidden]="!showCustomBack"
+<ion-back-button #backButton [routerLink]="parentPath" *ngIf="!ionBackVisible" [hidden]="!showOnPageReload"
             queryParamsHandling="merge"
+                 [text]="text"
+                 [icon]="icon"
             (click)="backClicked()">
-  <ion-icon name="chevron-back" slot="start"></ion-icon>
-  <ion-label>Close</ion-label>
-</ion-button>
-<ion-back-button *ngIf="ionBackVisible" (click)="backClicked()"></ion-back-button>
+</ion-back-button>
+<ion-back-button *ngIf="ionBackVisible"
+                 [text]="text"
+                 [icon]="icon"
+                 (click)="backClicked()"></ion-back-button>

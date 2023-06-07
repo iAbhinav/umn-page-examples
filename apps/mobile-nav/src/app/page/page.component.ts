@@ -7,18 +7,22 @@ import {
   ContentChildren,
   HostBinding,
   HostListener,
+  Input,
   OnDestroy,
-  QueryList, Renderer2,
+  QueryList,
+  Renderer2,
   ViewChild
 } from "@angular/core";
 import { IonRouterOutlet, NavController } from "@ionic/angular";
-import { ActivatedRoute, NavigationEnd, Router, RouterLink } from "@angular/router";
-import { DisplayService, rootAnimation } from "@umun-tech/core";
+import { ActivatedRoute, NavigationEnd, Params, QueryParamsHandling, Router } from "@angular/router";
+import { rootAnimation } from "@umun-tech/core";
 import { filter } from "rxjs/operators";
 import { LocationStrategy } from "@angular/common";
 import { BackComponent } from "./back/back.component";
 import { PathDirective } from "./directives/path.directive";
 import { PageStackService } from "./page-stack.service";
+import { PageWidthButtonComponent } from "./width-button/page-width-button.component";
+import { PageHelper } from "./services/page-helper.service";
 
 @Component({
   selector: "umn-page",
@@ -34,16 +38,35 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   static rootPage?: PageComponent;
   static stack: PageComponent[] = [];
 
-  @ContentChildren(RouterLink, { descendants: true }) links?: QueryList<RouterLink>;
+  @Input() emptyComponentClassName = "EmptyComponent";
+  @Input() contentWidthDesktopExpanded = 600;
+  @Input() set contentWidthDesktop(value: number) {
+    this._contentWidthDesktop = value;
+    if(!this.initialContentWidth){
+      this.initialContentWidth = value;
+    }
+    PageComponent.refreshStack()
+    this.cdr.detectChanges();
+  }
+  get contentWidthDesktop() {
+    return this._contentWidthDesktop;
+  }
+  get routerOutletWidth() {
+    return this._routerOutletWidth
+  }
+  private _contentWidthDesktop: number = 400;
+
+
   @ContentChildren(PathDirective, { descendants: true }) paths?: QueryList<PathDirective>;
+  @ContentChildren(PageWidthButtonComponent, { descendants: true }) widthButtons?: QueryList<PageWidthButtonComponent>;
   @ContentChildren(BackComponent, { descendants: true }) backButtons?: QueryList<BackComponent>;
   @HostBinding("class.ion-page") ionPageClass = true;
   @ViewChild("outlet", { static: false, read: IonRouterOutlet }) ionRouterOutlet?: IonRouterOutlet;
 
-
+  initialContentWidth = 0;
   isRootPage = false;
   showOutlet = false;
-  isMobile = this.display.isSmall;
+  isMobile = this.display.isMobile;
 
   /* contentPath is the path upto the current page's content.
    * it is excluding the outlet path
@@ -51,18 +74,37 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
    * to create a child path add / to the end of the parent path
    */
   contentPath: string = "";
-  routerColWidth = 400;
-  private pathIndex: any;
 
-  parentPath: string | undefined;
+
+  /**
+   * It is the path open in the ion-router-outlet
+   */
+  path?: string = "";
   parentPage: PageComponent | undefined;
+  /**
+   * Depth of the page in the page stack
+   * For Root Page pageIndex = 1 and depth is the number of children it has
+   *
+   * page -> A -> B -> C -> D
+   * depth-> 3 -> 2 -> 1 -> 0
+   * index-> 1 -> 2 -> 3 -> 4
+   *
+   */
+  private depth: number = 0;
+  /**
+   * Reverse of the depth
+   * For Root Page pageIndex = 1 and depth is the number of children it has
+   * @private
+   */
+  private pathIndex: any;
+  private _routerOutletWidth = 400;
 
   private doRootPageThings() {
     // PageComponent.stack = []
     PageComponent.rootPage = this;
   }
 
-  constructor(private router: Router, private display: DisplayService,
+  constructor(private router: Router, private display: PageHelper,
               private renderer: Renderer2,
               private navController: NavController,
               private pageStackService: PageStackService,
@@ -72,7 +114,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     route.url.subscribe(() => {
       // only called when a page is loaded first time
       this.path = route?.snapshot?.parent?.routeConfig?.path;
-      console.log("loaded First Time ", this.path);
       // @ts-ignore
       this.pathIndex = route?.snapshot?._lastPathIndex;
 
@@ -95,7 +136,10 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
 
   }
 
-  push(path?: string) {
+  push(path: string | undefined, params: Params | null | undefined, paramsHandling: QueryParamsHandling = "merge") {
+    if (!path) {
+      return Promise.reject("Null path cannot be pushed in the outled");
+    }
     let wantsToOpenContentPath = this.contentPath + "/" + path + "/";
 
     for (const page of PageComponent.stack) {
@@ -105,7 +149,9 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
       }
     }
     let command = (this.contentPath + "/" + path).replace(/\/\//g, "/").split("/");
-    return this.navController.navigateForward(command);
+    // let options = params? { queryParams: params,  queryParamsHandling: 'preserve'} : undefined;
+    return this.navController.navigateForward(command,
+      { queryParams: params, queryParamsHandling: paramsHandling });
   }
 
 
@@ -117,7 +163,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
 
   @HostListener("window:resize", ["$event"])
   onScreenSizeChange() {
-    this.isMobile = this.display.isSmall;
+    this.isMobile = this.display.isMobile;
     this.setContentPath();
     this.setShowOutlet();
     this.cdr.detectChanges();
@@ -131,22 +177,16 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
       .subscribe((event) => {
         //this is called anytime there is change in the url
 
-        console.log("NavigationEnd",
-          this.contentPath.replace(/\/\//g, "/"), this.router.url+"/")
+        let urlWithoutParams = this.router.url.split("?")[0] + "/";
 
-        if((this.router.url+"/").indexOf(this.contentPath.replace(/\/\//g, "/"))<0){
-          console.log("I don't Exist", this.path, PageComponent.stack, PageComponent.stack.indexOf(this))
-          if(PageComponent.stack.indexOf(this) > -1){
-            PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1)
+        if (urlWithoutParams.indexOf(this.contentPath.replace(/\/\//g, "/")) < 0) {
+          if (PageComponent.stack.indexOf(this) > -1) {
+            PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1);
           }
-
-          console.log(PageComponent.stack, PageComponent.stack.indexOf(this))
         }
 
         //check here, that after navigation, is this page still in url
         //if not remove from stack
-
-
 
 
         // if(this.isMobile){
@@ -159,8 +199,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
 
 
       });
-
-
     this.scrollIntoView();
 
   }
@@ -173,7 +211,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     try {
       // navigation has ended, you could trigger any necessary actions here
       this.showOutlet = this.ionRouterOutlet?.component?.constructor?.name != undefined
-        && this.ionRouterOutlet?.component?.constructor?.name != "EmptyComponent";
+        && this.ionRouterOutlet?.component?.constructor?.name != this.emptyComponentClassName;
       this.cdr.detectChanges();
     } catch (e) {
 
@@ -218,11 +256,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     });
   }
 
-
-  path?: string = "";
-  depth: number = 0;
-
-
   static refreshStack() {
 
     let parentPage: PageComponent | undefined;
@@ -232,25 +265,37 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     PageComponent.stack.forEach((page, index) => {
       page.depth = PageComponent.stack.length - page.pathIndex;
 
-      page.routerColWidth = 400 * (page.depth + 1);
+      // page._routerOutletWidth = 400 * (page.depth + 1);
 
       page.parentPage = parentPage;
       parentPage = page;
 
     });
 
+    let totalWidth = 0;
+    for (let index = PageComponent.stack.length-1; index >=0; index--){
+      const page = PageComponent.stack[index];
+      // page -> A -> B -> C -> D
+      // depth-> 3 -> 2 -> 1 -> 0
+      // index-> 1 -> 2 -> 3 -> 4
+      page._routerOutletWidth = page._contentWidthDesktop + totalWidth;
+      totalWidth = page._routerOutletWidth;
+    }
+
 
   }
 
   ngOnDestroy(): void {
-  if(PageComponent.stack.indexOf(this) > -1){
-    PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1);
-    PageComponent.refreshStack();
-  }
-
+    if (PageComponent.stack.indexOf(this) > -1) {
+      PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1);
+      PageComponent.refreshStack();
+    }
   }
 
   ngAfterContentInit(): void {
+    if(!this.initialContentWidth){
+      this.initialContentWidth = this.contentWidthDesktop
+    }
     this.backButtons?.forEach((button) => {
       button.parentPath = this.parentPage?.contentPath;
     });
@@ -258,49 +303,8 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     this.paths?.forEach(path => {
       path.page = this;
     });
-
-    this.links?.forEach(link => {
-      // // @ts-ignore
-      // if(link?.command && link?.command[0]?.indexOf(this.path) > -1){
-      //   // @ts-ignore
-      //   link.el.nativeElement.disabled = true
-      // }
-
-      // @ts-ignore
-      this.renderer.listen(link?.el?.nativeElement, "click", (element: any) => {
-
-        // @ts-ignore
-        console.log("clicky", this.path, link?.commands[0], PageComponent.stack.indexOf(this), PageComponent.stack);
-
-        let stack: PageComponent[] = [];
-
-        PageComponent.stack.forEach(page => {
-          //this should only happen when the router is not active
-          // @ts-ignore
-          if (link?.commands[0].indexOf(page.path) > -1) {
-            stack.push(page);
-          }
-        });
-
-        PageComponent.stack.sort((a, b) => a.pathIndex - b.pathIndex);
-
-        PageComponent.stack = stack;
-        // PageComponent.stack = PageComponent.stack.filter(page => page.contentPath.endsWith(this.path+"/"))
-// this.scrollIntoView()
-        // PageComponent.stack.splice(PageComponent.stack.indexOf(this));
-        if (PageComponent.rootPage) {
-          // PageComponent.rootPage.routerColWidth = 800
-
-          // PageComponent.refreshStack();
-          // PageComponent.rootPage.depth = PageComponent.stack.length - PageComponent.rootPage.pathIndex;
-          //
-          // PageComponent.rootPage.routerColWidth = 400 * (PageComponent.rootPage.depth + 1);
-        }
-
-
-        this.cdr.detectChanges();
-        return false;
-      });
+    this.widthButtons?.forEach(path => {
+      path.page = this;
     });
   }
 }

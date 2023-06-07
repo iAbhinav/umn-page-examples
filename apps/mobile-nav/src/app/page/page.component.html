@@ -1,11 +1,11 @@
 <div class="desktop row ion-nowrap" *ngIf="!isMobile" [class.top-row]="isRootPage" [@rootAnimation]>
-  <ion-col class=" content" [class.root]="isRootPage">
+  <ion-col class=" content" [class.root]="isRootPage" [style.--content-width-desktop]="contentWidthDesktop + 'px'">
     <div  class="ion-page"  [class.can-go-back]="true" >
       <ng-container *ngTemplateOutlet="content"></ng-container>
     </div>
   </ion-col>
   <ion-col class="outlet">
-    <ion-router-outlet #outlet [style.min-width]="routerColWidth+'px'"></ion-router-outlet>
+    <ion-router-outlet #outlet [style.min-width]="routerOutletWidth+'px'"></ion-router-outlet>
   </ion-col>
 </div>
 

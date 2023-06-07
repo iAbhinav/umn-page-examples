@@ -6,6 +6,7 @@ import { PageComponent } from "./page.component";
 import { CoreModule } from "@umun-tech/core";
 import { BackComponent } from "./back/back.component";
 import { PathDirective } from "./directives/path.directive";
+import { PageWidthButtonComponent } from "./width-button/page-width-button.component";
 
 @NgModule({
   imports: [
@@ -17,14 +18,17 @@ import { PathDirective } from "./directives/path.directive";
   exports: [
     PageComponent,
     BackComponent,
-    PathDirective
+    PathDirective,
+    PageWidthButtonComponent
   ],
   declarations: [
     PageComponent,
     BackComponent,
-    PathDirective
+    PathDirective,
+    PageWidthButtonComponent
   ]
 })
 export class PageModule {
+
 
 }

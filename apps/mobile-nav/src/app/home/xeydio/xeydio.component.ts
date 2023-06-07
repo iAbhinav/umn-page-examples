@@ -17,9 +17,7 @@ import { Component } from "@angular/core";
       <ion-content>
         Hi I am Xeydio
 
-        <ion-item [routerLink]="page.contentPath+ '/beydio'" routerLinkActive="active"
-
-                  queryParamsHandling="merge">
+        <ion-item path="beydio">
           Beydio
         </ion-item>
       </ion-content>

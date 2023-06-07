@@ -3,23 +3,21 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-beydio",
   template: `
-    <umn-page #page>
+    <umn-page>
       <ion-header>
         <ion-toolbar>
           <ion-buttons>
             <umn-back></umn-back>
           </ion-buttons>
           <ion-title>
-            Aey
+            Bey
           </ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
         Hi I am Beydio
 
-        <ion-item [routerLink]="page.contentPath+ '/aeydio'" routerLinkActive="active"
-
-                  queryParamsHandling="merge">
+        <ion-item  path='aeydio' [params]="{aId:3864834304}">
           Aeydio
         </ion-item>
       </ion-content>

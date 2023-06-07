@@ -21,6 +21,10 @@ import { PageModule } from "../../page/page.module";
           {
             path: "deydio",
             loadChildren: () => import("./../deydio/deydio.module").then(m => m.DeydioModule)
+          },
+          {
+            path: "aeydio",
+            loadChildren: () => import("./../aeydio/aeydio.module").then(m => m.AeydioModule)
           }
         ]
       }

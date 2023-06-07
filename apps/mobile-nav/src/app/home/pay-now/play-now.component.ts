@@ -18,28 +18,25 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   template: `
 
 
-    <umn-page #page>
+    <umn-page [contentWidthDesktop]="200" [contentWidthDesktopExpanded]="600">
       <ion-header>
         <ion-toolbar>
           <ion-buttons>
-            <umn-back [showCustomBack]="false"></umn-back>
+            <umn-page-width-button></umn-page-width-button>
+<!--            <umn-back [showCustomBack]="false"></umn-back>-->
           </ion-buttons>
-          <ion-title routerLink="/home/play-now/" routerLinkActive="active">
+          <ion-title>
             Play Now
           </ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
         Hi I am PlayNow
-<!--        [routerLink]="page.contentPath + '/heydio'"-->
-<!--        [queryParams]="{ stationName: 'Heydio'}"-->
-        <ion-item  routerLinkActive="active" path="heydio"
-                  
-                  queryParamsHandling="merge">
+        <ion-item  path="heydio" [params]="{heydioId: 10001}">
           Heydio
         </ion-item>
-        <ion-item path="seydio"
-                  routerLinkActive="active" queryParamsHandling="merge">
+        
+        <ion-item path="seydio">
           Seydio
         </ion-item>
 

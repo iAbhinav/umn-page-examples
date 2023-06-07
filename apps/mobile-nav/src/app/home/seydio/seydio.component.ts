@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-seydio",
   template: `
-    <umn-page #page>
+    <umn-page>
       <ion-header>
         <ion-toolbar>
           <ion-buttons>
@@ -17,10 +17,11 @@ import { Component } from "@angular/core";
       <ion-content>
         Hi I am seydio
 
-        <ion-item [routerLink]="page.contentPath+ '/deydio'" routerLinkActive="active"
-
-                  queryParamsHandling="merge">
+        <ion-item path="deydio" color="grey" activeColor="green">
           Deydio
+        </ion-item>
+        <ion-item path="aeydio" color="grey" activeColor="green">
+          Aeydio
         </ion-item>
       </ion-content>
     </umn-page>

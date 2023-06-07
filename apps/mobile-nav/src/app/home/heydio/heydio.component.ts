@@ -5,11 +5,14 @@ import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from "@ang
   template: `
 
 
-    <umn-page #page>
+    <umn-page>
       <ion-header [translucent]="true">
         <ion-toolbar>
-          <ion-buttons>
+          <ion-buttons slot="start">
             <umn-back></umn-back>
+          </ion-buttons>
+          <ion-buttons slot="start">
+            <umn-page-width-button [showLabel]="true"></umn-page-width-button>
           </ion-buttons>
           <ion-title>
             Heydio
@@ -25,13 +28,7 @@ import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from "@ang
           </ion-toolbar>
         </ion-header>
         Hi I am Heydio
-<!--        [routerLink]="page.contentPath+ '/deydio'"-->
-<!--        (click)="page.push('deydio', $event)"-->
-        <ion-item 
-                  path="deydio"
-                  routerLinkActive="active"
-
-                  queryParamsHandling="merge">
+        <ion-item path="deydio">
           Deydio
         </ion-item>
 

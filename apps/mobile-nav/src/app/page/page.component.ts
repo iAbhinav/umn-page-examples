@@ -15,7 +15,6 @@ import {
 } from "@angular/core";
 import { IonRouterOutlet, NavController } from "@ionic/angular";
 import { ActivatedRoute, NavigationEnd, Params, QueryParamsHandling, Router } from "@angular/router";
-import { rootAnimation } from "@umun-tech/core";
 import { filter } from "rxjs/operators";
 import { LocationStrategy } from "@angular/common";
 import { BackComponent } from "./back/back.component";
@@ -23,6 +22,7 @@ import { PathDirective } from "./directives/path.directive";
 import { PageStackService } from "./page-stack.service";
 import { PageWidthButtonComponent } from "./width-button/page-width-button.component";
 import { PageHelper } from "./services/page-helper.service";
+import { fadeInOut } from "./animations/page.animations";
 
 @Component({
   selector: "umn-page",
@@ -30,7 +30,7 @@ import { PageHelper } from "./services/page-helper.service";
   styleUrls: ["./page.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    rootAnimation
+    fadeInOut
   ]
 })
 export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy {
@@ -230,7 +230,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
 
         parentElement.scrollLeft = parentElement.scrollWidth; // Set initial scroll position to the rightmost side.
         const scrollAmount = parentElement.scrollWidth - parentElement.clientWidth;
-        let animationDuration: number = 700; //IMPORTANT:animationDuration should be more than the time of rootAnimation which is 500ms
+        let animationDuration: number = 700; //IMPORTANT:animationDuration should be more than the time of fadeAnimation which is 500ms
         const startTime = performance.now();
         const duration = animationDuration; // Animation duration in milliseconds
 

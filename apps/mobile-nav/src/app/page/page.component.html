@@ -1,4 +1,4 @@
-<div class="desktop row ion-nowrap" *ngIf="!isMobile" [class.top-row]="isRootPage" [@rootAnimation]>
+<div class="desktop row ion-nowrap" *ngIf="!isMobile" [class.top-row]="isRootPage" [@fadeInOut]>
   <ion-col class=" content" [class.root]="isRootPage" [style.--content-width-desktop]="contentWidthDesktop + 'px'">
     <div  class="ion-page"  [class.can-go-back]="true" >
       <ng-container *ngTemplateOutlet="content"></ng-container>

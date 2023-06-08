@@ -6,6 +6,7 @@ import { PageComponent } from "./page.component";
 import { BackComponent } from "./back/back.component";
 import { PathDirective } from "./directives/path.directive";
 import { PageWidthButtonComponent } from "./width-button/page-width-button.component";
+import { PageMobileComponent } from "./page-mobile/page-mobile.component";
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { PageWidthButtonComponent } from "./width-button/page-width-button.compo
     PageComponent,
     BackComponent,
     PathDirective,
-    PageWidthButtonComponent
+    PageWidthButtonComponent,
+    PageMobileComponent
   ]
 })
 export class PageModule {

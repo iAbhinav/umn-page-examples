@@ -1,10 +1,12 @@
 <ion-back-button #backButton [routerLink]="parentPath" *ngIf="!ionBackVisible" [hidden]="!showOnPageReload"
             queryParamsHandling="merge"
-                 [text]="text"
+                 [text]="label"
                  [icon]="icon"
             (click)="backClicked()">
 </ion-back-button>
-<ion-back-button *ngIf="ionBackVisible"
-                 [text]="text"
+<ion-back-button *ngIf="ionBackVisible" class="ion-hide-md-up"
+                 [text]="label"
                  [icon]="icon"
+                 (click)="backClicked()"></ion-back-button>
+<ion-back-button *ngIf="ionBackVisible" class="ion-hide-md-down"
                  (click)="backClicked()"></ion-back-button>

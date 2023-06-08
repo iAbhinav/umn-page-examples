@@ -18,7 +18,7 @@ import { IonBackButton } from "@ionic/angular";
 })
 export class BackComponent implements AfterViewInit {
 
-  @Input() text: any = "Back";
+  @Input() label: any = "Back";
   @Input() icon: any = "chevron-back";
   /**
    * Since, Ionic does not provide a back button on window reload
@@ -50,7 +50,7 @@ export class BackComponent implements AfterViewInit {
   ionBackVisible: boolean = false;
 
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,) {
   }
 
   ngAfterViewInit() {

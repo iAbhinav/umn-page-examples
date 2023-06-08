@@ -1,6 +1,8 @@
+<ng-content select=".umn-page-header"></ng-content>
+
 <div class="desktop row ion-nowrap" *ngIf="!isMobile" [class.top-row]="isRootPage" [@fadeInOut]>
-  <ion-col class=" content" [class.root]="isRootPage" [style.--content-width-desktop]="contentWidthDesktop + 'px'">
-    <div  class="ion-page"  [class.can-go-back]="true" >
+  <ion-col class=" content" [class.root]="isRootPage" [style.--content-width-desktop]="contentWidthDesktop + widthUnit">
+    <div class="ion-page" [class.can-go-back]="true">
       <ng-container *ngTemplateOutlet="content"></ng-container>
     </div>
   </ion-col>
@@ -9,14 +11,13 @@
   </ion-col>
 </div>
 
-<ion-row class="mobile row ion-nowrap" *ngIf="isMobile">
-  <div [class.ion-page]="!showOutlet" [class.can-go-back]="true" [hidden]="showOutlet">
-    <ng-container *ngTemplateOutlet="content"></ng-container>
-  </div>
-  <div [hidden]="!showOutlet">
-    <ion-router-outlet #outlet></ion-router-outlet>
-  </div>
-</ion-row>
+<umn-page-mobile #mobilePage *ngIf="isMobile"
+                 [isRootPage]="isRootPage"
+                 [emptyComponentClassName]="emptyComponentClassName">
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</umn-page-mobile>
+
+<ng-content select=".umn-page-footer"></ng-content>
 
 <ng-template #content>
   <ng-content></ng-content>

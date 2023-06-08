@@ -7,8 +7,8 @@ import {
   ContentChildren,
   HostBinding,
   HostListener,
-  Input,
-  OnDestroy,
+  Input, NgZone,
+  OnDestroy, OnInit,
   QueryList,
   Renderer2,
   ViewChild
@@ -23,6 +23,7 @@ import { PageStackService } from "./page-stack.service";
 import { PageWidthButtonComponent } from "./width-button/page-width-button.component";
 import { PageHelper } from "./services/page-helper.service";
 import { fadeInOut } from "./animations/page.animations";
+import { PageMobileComponent } from "./page-mobile/page-mobile.component";
 
 @Component({
   selector: "umn-page",
@@ -35,37 +36,60 @@ import { fadeInOut } from "./animations/page.animations";
 })
 export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy {
 
+
+
   static rootPage?: PageComponent;
   static stack: PageComponent[] = [];
 
+  /**
+   *
+   */
+
   @Input() emptyComponentClassName = "EmptyComponent";
   @Input() contentWidthDesktopExpanded = 600;
+  @Input() widthUnit = 'px';
+
   @Input() set contentWidthDesktop(value: number) {
     this._contentWidthDesktop = value;
-    if(!this.initialContentWidth){
+    if (!this.initialContentWidth) {
       this.initialContentWidth = value;
     }
-    PageComponent.refreshStack()
+    PageComponent.refreshStack();
     this.cdr.detectChanges();
   }
+
+  @Input() set label(value: string | undefined) {
+    this._label = value;
+  }
+
   get contentWidthDesktop() {
     return this._contentWidthDesktop;
   }
-  get routerOutletWidth() {
-    return this._routerOutletWidth
-  }
-  private _contentWidthDesktop: number = 400;
 
+  get routerOutletWidth() {
+    return this._routerOutletWidth;
+  }
+  get label(): string | undefined{
+    return this._label ? this._label : this.path;
+  }
+
+  get stack(): PageComponent[] {
+    return PageComponent.stack;
+  }
+
+  private _contentWidthDesktop: number = 400;
+  @Input() private _label?: string = "";
 
   @ContentChildren(PathDirective, { descendants: true }) paths?: QueryList<PathDirective>;
   @ContentChildren(PageWidthButtonComponent, { descendants: true }) widthButtons?: QueryList<PageWidthButtonComponent>;
   @ContentChildren(BackComponent, { descendants: true }) backButtons?: QueryList<BackComponent>;
   @HostBinding("class.ion-page") ionPageClass = true;
   @ViewChild("outlet", { static: false, read: IonRouterOutlet }) ionRouterOutlet?: IonRouterOutlet;
+  @ViewChild("mobilePage", { static: false, read: PageMobileComponent }) mobilePage?: PageMobileComponent;
 
   initialContentWidth = 0;
   isRootPage = false;
-  showOutlet = false;
+
   isMobile = this.display.isMobile;
 
   /* contentPath is the path upto the current page's content.
@@ -99,6 +123,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   private pathIndex: any;
   private _routerOutletWidth = 400;
 
+
   private doRootPageThings() {
     // PageComponent.stack = []
     PageComponent.rootPage = this;
@@ -108,6 +133,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
               private renderer: Renderer2,
               private navController: NavController,
               private pageStackService: PageStackService,
+              private ngZone: NgZone,
               private route: ActivatedRoute, private locationStrategy: LocationStrategy,
               private cdr: ChangeDetectorRef) {
     this.setContentPath();
@@ -120,12 +146,11 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
       if (this.pathIndex === 1) {
         this.isRootPage = true;
         this.doRootPageThings();
-
+        this.ngZone.runOutsideAngular(() => {
+          window.addEventListener("resize", this.onWindowResize.bind(this));
+        });
       }
-      // if(this.isMobile){
-      this.setShowOutlet();
       this.setContentPath();
-      // }
 
       PageComponent.stack.push(this);
       PageComponent.refreshStack();
@@ -154,6 +179,17 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
       { queryParams: params, queryParamsHandling: paramsHandling });
   }
 
+  navigateToMe() {
+    this.navController.navigateForward([this.contentPath],
+      {  queryParamsHandling: 'merge' }).then(res=>{
+      this.cdr.detectChanges()
+      setTimeout(()=>{
+        this.cdr.detectChanges()
+      }, 700)
+    });
+
+  }
+
 
   canGoBack(): boolean {
     // @ts-ignore
@@ -161,14 +197,18 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     return history.state && history.state.navigationId > 1;
   }
 
-  @HostListener("window:resize", ["$event"])
-  onScreenSizeChange() {
+
+  onWindowResize(event: any) {
     this.isMobile = this.display.isMobile;
-    this.setContentPath();
-    this.setShowOutlet();
+    if (this.isMobile) {
+      PageComponent.stack.forEach(page => {
+        page.mobilePage?.setShowOutlet();
+      });
+    }
+
+    this.mobilePage?.setShowOutlet();
     this.cdr.detectChanges();
   }
-
 
   ngAfterViewInit(): void {
 
@@ -193,7 +233,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
         //only to be done in mobile
         this.doRootPageThings();
         PageComponent.refreshStack();
-        this.setShowOutlet();
         this.cdr.detectChanges();
         // }
 
@@ -203,20 +242,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
 
   }
 
-  get outletState() {
-    return this.showOutlet ? "in" : "out";
-  }
-
-  private setShowOutlet() {
-    try {
-      // navigation has ended, you could trigger any necessary actions here
-      this.showOutlet = this.ionRouterOutlet?.component?.constructor?.name != undefined
-        && this.ionRouterOutlet?.component?.constructor?.name != this.emptyComponentClassName;
-      this.cdr.detectChanges();
-    } catch (e) {
-
-    }
-  }
 
   private setContentPath() {
     this.contentPath = this.route.snapshot.pathFromRoot.map(part => part.url.map(segment => segment.path).join("/")).join("/");
@@ -273,7 +298,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     });
 
     let totalWidth = 0;
-    for (let index = PageComponent.stack.length-1; index >=0; index--){
+    for (let index = PageComponent.stack.length - 1; index >= 0; index--) {
       const page = PageComponent.stack[index];
       // page -> A -> B -> C -> D
       // depth-> 3 -> 2 -> 1 -> 0
@@ -286,15 +311,17 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener("resize", this.onWindowResize.bind(this));
     if (PageComponent.stack.indexOf(this) > -1) {
       PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1);
       PageComponent.refreshStack();
+      this.cdr.markForCheck()
     }
   }
 
   ngAfterContentInit(): void {
-    if(!this.initialContentWidth){
-      this.initialContentWidth = this.contentWidthDesktop
+    if (!this.initialContentWidth) {
+      this.initialContentWidth = this.contentWidthDesktop;
     }
     this.backButtons?.forEach((button) => {
       button.parentPath = this.parentPage?.contentPath;
@@ -307,4 +334,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
       path.page = this;
     });
   }
+
+
 }

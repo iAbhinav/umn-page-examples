@@ -1,5 +1,6 @@
 :host {
   --content-width-desktop: 400px;
+  --row-overflow-x: auto
 }
 
 .row {
@@ -29,7 +30,5 @@
 }
 
 .top-row {
-  overflow-x: auto;
-
+  overflow-x: var(--row-overflow-x);
 }
-

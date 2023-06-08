@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from "@angular/core";
 import { PageComponent } from "../page.component";
+import { PageHelper } from "../services/page-helper.service";
 
 @Component({
   selector: "umn-page-width-button",
@@ -23,7 +24,7 @@ export class PageWidthButtonComponent {
     }
   }
 
-
+  isVisible: boolean;
   get showLabel(): boolean {
     return this._showLabel;
   }
@@ -35,6 +36,11 @@ export class PageWidthButtonComponent {
   icon = "expand-outline";
   slot = "icon-only";
   private _showLabel = false;
+
+  constructor(private pageHelper: PageHelper) {
+    this.isVisible = !this.pageHelper.isMobile;
+  }
+
   toggle() {
     if(!this.page){
       console.warn("page-width-button should only be used inside of a umn-page component");

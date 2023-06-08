@@ -44,6 +44,7 @@ export class PageDesktopComponent implements AfterViewInit, AfterContentInit {
   @Input() isRootPage = false;
 
   @Input() set contentWidthDesktop(value: any) {
+    console.log(value)
     if(!value){
       return
     }
@@ -78,6 +79,10 @@ export class PageDesktopComponent implements AfterViewInit, AfterContentInit {
 
         parentElement.scrollLeft = parentElement.scrollWidth; // Set initial scroll position to the rightmost side.
         const scrollAmount = parentElement.scrollWidth - parentElement.clientWidth;
+        if(scrollAmount < 0){
+          this.scrollIntoView()
+          return;
+        }
         let animationDuration: number = 700; //IMPORTANT:animationDuration should be more than the time of fadeAnimation which is 500ms
         const startTime = performance.now();
         const duration = animationDuration; // Animation duration in milliseconds
@@ -101,7 +106,7 @@ export class PageDesktopComponent implements AfterViewInit, AfterContentInit {
         this.cdr.detectChanges();
       }
 
-    });
+    }, 100);
   }
   ngAfterViewInit(): void {
 

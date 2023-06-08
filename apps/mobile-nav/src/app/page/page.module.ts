@@ -19,7 +19,8 @@ import { PageDesktopComponent } from "./components/page-desktop/page-desktop.com
     PageComponent,
     BackComponent,
     PathDirective,
-    PageWidthButtonComponent
+    PageWidthButtonComponent,
+    PageDesktopComponent
   ],
   declarations: [
     PageComponent,

@@ -1,6 +1,6 @@
 <ng-content select=".umn-page-header"></ng-content>
 
-<umn-page-desktop #desktopPage *ngIf="!isMobile"
+<umn-page-desktop #desktopPage *ngIf="isColumn"
                   [(contentWidthDesktop)]="contentWidthDesktop"
                   [contentWidthDesktopExpanded]="contentWidthDesktopExpanded"
                   [widthUnit]="widthUnit"
@@ -8,7 +8,7 @@
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </umn-page-desktop>
 
-<umn-page-mobile #mobilePage *ngIf="isMobile"
+<umn-page-mobile #mobilePage *ngIf="!isColumn"
                  [isRootPage]="isRootPage"
                  [emptyComponentClassName]="emptyComponentClassName">
   <ng-container *ngTemplateOutlet="content"></ng-container>

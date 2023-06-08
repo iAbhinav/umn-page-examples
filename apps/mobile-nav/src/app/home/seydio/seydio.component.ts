@@ -7,7 +7,7 @@ import { Component } from "@angular/core";
       <ion-header>
         <ion-toolbar>
           <ion-buttons>
-            <umn-back></umn-back>
+            <umn-back label="Play Now"></umn-back>
           </ion-buttons>
           <ion-title>
             sey

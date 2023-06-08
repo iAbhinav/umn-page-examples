@@ -18,7 +18,7 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   template: `
 
 
-    <umn-page [contentWidthDesktop]="200" [contentWidthDesktopExpanded]="600">
+    <umn-page #page [contentWidthDesktop]="400" widthUnit="px" [contentWidthDesktopExpanded]="600">
       <ion-header>
         <ion-toolbar>
           <ion-buttons>
@@ -41,12 +41,25 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
         </ion-item>
 
       </ion-content>
+      <ion-footer *ngIf="!page.isMobile" class="umn-page-footer">
+        <ion-toolbar>
+          <ion-breadcrumbs slot="start">
+            <ion-breadcrumb *ngFor="let page of page.stack" 
+                            (click)="page.navigateToMe()">{{page?.label}}</ion-breadcrumb>
+          </ion-breadcrumbs>
+          <ion-buttons slot="end">
+            <ion-chip>Total: 2</ion-chip>
+          </ion-buttons>  
+        </ion-toolbar>
+      </ion-footer>
     </umn-page>
   `,
   styles: [
     `
         umn-page {
             display: flex;
+            /*--row-overflow-x: none;*/
+            /*--content-width-desktop: 100%;*/
         }
         .active {
             --color: var(--ion-color-primary);

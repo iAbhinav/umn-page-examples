@@ -4,10 +4,14 @@ import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { HeydioComponent } from "./heydio.component";
 import { PageModule } from "../../page/page.module";
+import { CreateHeydioComponent } from "./create-heydio.component";
+import { UpdateHeydioComponent } from "./update-heydio.component";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   imports: [
     IonicModule,
+    FormsModule,
     CommonModule,
     RouterModule.forChild([
       {
@@ -21,6 +25,14 @@ import { PageModule } from "../../page/page.module";
           {
             path: "deydio",
             loadChildren: () => import("./../deydio/deydio.module").then(m => m.DeydioModule)
+          },
+          {
+            path: "create",
+            component: CreateHeydioComponent
+          },
+          {
+            path: "update",
+            component: UpdateHeydioComponent
           }
         ]
       }
@@ -28,7 +40,9 @@ import { PageModule } from "../../page/page.module";
     PageModule
   ],
   declarations: [
-    HeydioComponent
+    HeydioComponent,
+    CreateHeydioComponent,
+    UpdateHeydioComponent
     ],
   exports: [
     RouterModule

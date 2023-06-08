@@ -13,6 +13,7 @@ export class PathDirective {
   @Input("color") fontColor?: string = "";
   @Input("activeColor") activeColor?: string = "var(--ion-color-primary)";
 
+  page?: PageComponent;
   @HostBinding("style.color") get color() {
     let wantsToOpenContentPath = this.page?.contentPath+"/"+this.path+"/"
     for (const page of PageComponent.stack) {
@@ -25,10 +26,6 @@ export class PathDirective {
     this.cdr.markForCheck();
     return this.fontColor;
   };
-
-
-
-  page?: PageComponent;
 
   constructor(private cdr: ChangeDetectorRef,private el: ElementRef, private renderer: Renderer2) {
     this.renderer.setAttribute(this.el.nativeElement, 'button', '');

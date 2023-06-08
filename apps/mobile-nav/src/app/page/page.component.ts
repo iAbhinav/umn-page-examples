@@ -6,9 +6,9 @@ import {
   Component,
   ContentChildren,
   HostBinding,
-  HostListener,
-  Input, NgZone,
-  OnDestroy, OnInit,
+  Input,
+  NgZone,
+  OnDestroy,
   QueryList,
   Renderer2,
   ViewChild
@@ -17,59 +17,55 @@ import { IonRouterOutlet, NavController } from "@ionic/angular";
 import { ActivatedRoute, NavigationEnd, Params, QueryParamsHandling, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { LocationStrategy } from "@angular/common";
-import { BackComponent } from "./back/back.component";
 import { PathDirective } from "./directives/path.directive";
 import { PageStackService } from "./page-stack.service";
-import { PageWidthButtonComponent } from "./width-button/page-width-button.component";
 import { PageHelper } from "./services/page-helper.service";
-import { fadeInOut } from "./animations/page.animations";
-import { PageMobileComponent } from "./page-mobile/page-mobile.component";
+import { PageWidthButtonComponent } from "./components/width-button/page-width-button.component";
+import { BackComponent } from "./components/back/back.component";
+import { PageMobileComponent } from "./components/page-mobile/page-mobile.component";
+import { PageDesktopComponent } from "./components/page-desktop/page-desktop.component";
 
 @Component({
   selector: "umn-page",
   templateUrl: "./page.component.html",
   styleUrls: ["./page.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    fadeInOut
-  ]
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-
-
 
   static rootPage?: PageComponent;
   static stack: PageComponent[] = [];
 
-  /**
-   *
-   */
+  static refreshStack() {
+    let parentPage: PageComponent | undefined;
+    PageComponent.stack.sort((a, b) => a.pathIndex - b.pathIndex);
+    PageComponent.stack.forEach((page, index) => {
+      page.depth = PageComponent.stack.length - page.pathIndex;
+      page.parentPage = parentPage;
+      parentPage = page;
+    });
+    let totalWidth = 0;
+    for (let index = PageComponent.stack.length - 1; index >= 0; index--) {
+      const page = PageComponent.stack[index];
+      if (page?.desktopPage) {
+        page.desktopPage.routerOutletWidth = page.desktopPage.contentWidthDesktop + totalWidth;
+        totalWidth = page.desktopPage.routerOutletWidth;
+      }
+    }
+  }
 
   @Input() emptyComponentClassName = "EmptyComponent";
   @Input() contentWidthDesktopExpanded = 600;
-  @Input() widthUnit = 'px';
+  @Input() widthUnit = "px";
 
-  @Input() set contentWidthDesktop(value: number) {
-    this._contentWidthDesktop = value;
-    if (!this.initialContentWidth) {
-      this.initialContentWidth = value;
-    }
-    PageComponent.refreshStack();
-    this.cdr.detectChanges();
-  }
+  @Input() contentWidthDesktop?: number;
 
   @Input() set label(value: string | undefined) {
     this._label = value;
   }
 
-  get contentWidthDesktop() {
-    return this._contentWidthDesktop;
-  }
-
-  get routerOutletWidth() {
-    return this._routerOutletWidth;
-  }
-  get label(): string | undefined{
+  get label(): string | undefined {
     return this._label ? this._label : this.path;
   }
 
@@ -77,8 +73,6 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
     return PageComponent.stack;
   }
 
-  private _contentWidthDesktop: number = 400;
-  @Input() private _label?: string = "";
 
   @ContentChildren(PathDirective, { descendants: true }) paths?: QueryList<PathDirective>;
   @ContentChildren(PageWidthButtonComponent, { descendants: true }) widthButtons?: QueryList<PageWidthButtonComponent>;
@@ -86,12 +80,11 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   @HostBinding("class.ion-page") ionPageClass = true;
   @ViewChild("outlet", { static: false, read: IonRouterOutlet }) ionRouterOutlet?: IonRouterOutlet;
   @ViewChild("mobilePage", { static: false, read: PageMobileComponent }) mobilePage?: PageMobileComponent;
+  @ViewChild("desktopPage", { static: false, read: PageDesktopComponent }) desktopPage?: PageDesktopComponent;
 
-  initialContentWidth = 0;
+
   isRootPage = false;
-
   isMobile = this.display.isMobile;
-
   /* contentPath is the path upto the current page's content.
    * it is excluding the outlet path
    * it does not end with '/'
@@ -121,13 +114,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
    * @private
    */
   private pathIndex: any;
-  private _routerOutletWidth = 400;
-
-
-  private doRootPageThings() {
-    // PageComponent.stack = []
-    PageComponent.rootPage = this;
-  }
+  private _label?: string = "";
 
   constructor(private router: Router, private display: PageHelper,
               private renderer: Renderer2,
@@ -145,22 +132,27 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
 
       if (this.pathIndex === 1) {
         this.isRootPage = true;
-        this.doRootPageThings();
+        PageComponent.rootPage = this;
         this.ngZone.runOutsideAngular(() => {
           window.addEventListener("resize", this.onWindowResize.bind(this));
         });
       }
       this.setContentPath();
-
       PageComponent.stack.push(this);
       PageComponent.refreshStack();
-
       this.cdr.detectChanges();
-
     });
-
   }
 
+  /**
+   * Open a page
+   * Desktop: Opens a page in right hand of the current page
+   * Mobile: Opens a page in the full screen on top of the current page
+   *
+   * @param path: Immediate child path of the current page
+   * @param params: Query params to be passed to the page
+   * @param paramsHandling: How to handle the query params "merge" or "preserve"
+   */
   push(path: string | undefined, params: Params | null | undefined, paramsHandling: QueryParamsHandling = "merge") {
     if (!path) {
       return Promise.reject("Null path cannot be pushed in the outled");
@@ -174,27 +166,22 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
       }
     }
     let command = (this.contentPath + "/" + path).replace(/\/\//g, "/").split("/");
-    // let options = params? { queryParams: params,  queryParamsHandling: 'preserve'} : undefined;
     return this.navController.navigateForward(command,
       { queryParams: params, queryParamsHandling: paramsHandling });
   }
 
-  navigateToMe() {
+  /**
+   * If you have the reference of a page, you may open the page without
+   * knowing the path of the page
+   */
+  navigateToThisPage() {
     this.navController.navigateForward([this.contentPath],
-      {  queryParamsHandling: 'merge' }).then(res=>{
-      this.cdr.detectChanges()
-      setTimeout(()=>{
-        this.cdr.detectChanges()
-      }, 700)
+      { queryParamsHandling: "merge" }).then(res => {
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.cdr.detectChanges();
+      }, 700);
     });
-
-  }
-
-
-  canGoBack(): boolean {
-    // @ts-ignore
-    const history = this.locationStrategy._platformStrategy.history;
-    return history.state && history.state.navigationId > 1;
   }
 
 
@@ -205,41 +192,28 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
         page.mobilePage?.setShowOutlet();
       });
     }
-
     this.mobilePage?.setShowOutlet();
     this.cdr.detectChanges();
   }
 
   ngAfterViewInit(): void {
-
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
         //this is called anytime there is change in the url
-
         let urlWithoutParams = this.router.url.split("?")[0] + "/";
-
         if (urlWithoutParams.indexOf(this.contentPath.replace(/\/\//g, "/")) < 0) {
+          //this page is not in the stack
           if (PageComponent.stack.indexOf(this) > -1) {
             PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1);
           }
         }
-
-        //check here, that after navigation, is this page still in url
-        //if not remove from stack
-
-
-        // if(this.isMobile){
-        //only to be done in mobile
-        this.doRootPageThings();
         PageComponent.refreshStack();
         this.cdr.detectChanges();
-        // }
-
-
+        if (!this.isMobile) {
+          this.desktopPage?.scrollIntoView();
+        }
       });
-    this.scrollIntoView();
-
   }
 
 
@@ -248,81 +222,16 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   }
 
 
-  scrollIntoView() {
-    setTimeout(() => {
-      const parentElement = document.querySelector(".top-row") as HTMLElement;
-      if (parentElement) {
-
-        parentElement.scrollLeft = parentElement.scrollWidth; // Set initial scroll position to the rightmost side.
-        const scrollAmount = parentElement.scrollWidth - parentElement.clientWidth;
-        let animationDuration: number = 700; //IMPORTANT:animationDuration should be more than the time of fadeAnimation which is 500ms
-        const startTime = performance.now();
-        const duration = animationDuration; // Animation duration in milliseconds
-
-        function scrollAnimation(timestamp: number) {
-          const elapsed = timestamp - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const ease = easeOutQuad(progress);
-          parentElement.scrollLeft = parentElement.scrollWidth - (scrollAmount * ease); // Change scroll direction to the left.
-
-          if (elapsed < duration) {
-            requestAnimationFrame(scrollAnimation);
-          }
-        }
-
-        function easeOutQuad(progress: number) {
-          return 1 - Math.pow(1 - progress, 2);
-        }
-
-        requestAnimationFrame(scrollAnimation);
-        this.cdr.detectChanges();
-      }
-
-    });
-  }
-
-  static refreshStack() {
-
-    let parentPage: PageComponent | undefined;
-
-    PageComponent.stack.sort((a, b) => a.pathIndex - b.pathIndex);
-
-    PageComponent.stack.forEach((page, index) => {
-      page.depth = PageComponent.stack.length - page.pathIndex;
-
-      // page._routerOutletWidth = 400 * (page.depth + 1);
-
-      page.parentPage = parentPage;
-      parentPage = page;
-
-    });
-
-    let totalWidth = 0;
-    for (let index = PageComponent.stack.length - 1; index >= 0; index--) {
-      const page = PageComponent.stack[index];
-      // page -> A -> B -> C -> D
-      // depth-> 3 -> 2 -> 1 -> 0
-      // index-> 1 -> 2 -> 3 -> 4
-      page._routerOutletWidth = page._contentWidthDesktop + totalWidth;
-      totalWidth = page._routerOutletWidth;
-    }
-
-
-  }
-
   ngOnDestroy(): void {
     window.removeEventListener("resize", this.onWindowResize.bind(this));
     if (PageComponent.stack.indexOf(this) > -1) {
       PageComponent.stack.splice(PageComponent.stack.indexOf(this), 1);
       PageComponent.refreshStack();
-      this.cdr.markForCheck()
+      this.cdr.markForCheck();
     }
   }
 
   ngAfterContentInit(): void {
-    if (!this.initialContentWidth) {
-      this.initialContentWidth = this.contentWidthDesktop;
-    }
     this.backButtons?.forEach((button) => {
       button.parentPath = this.parentPage?.contentPath;
     });

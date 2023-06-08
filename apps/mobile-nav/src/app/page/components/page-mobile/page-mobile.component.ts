@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, I
 import { IonRouterOutlet } from "@ionic/angular";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
-import { PageHelper } from "../services/page-helper.service";
+import { PageHelper } from "../../services/page-helper.service";
 
 @Component({
   selector: "umn-page-mobile",

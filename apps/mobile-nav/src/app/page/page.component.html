@@ -1,15 +1,12 @@
 <ng-content select=".umn-page-header"></ng-content>
 
-<div class="desktop row ion-nowrap" *ngIf="!isMobile" [class.top-row]="isRootPage" [@fadeInOut]>
-  <ion-col class=" content" [class.root]="isRootPage" [style.--content-width-desktop]="contentWidthDesktop + widthUnit">
-    <div class="ion-page" [class.can-go-back]="true">
-      <ng-container *ngTemplateOutlet="content"></ng-container>
-    </div>
-  </ion-col>
-  <ion-col class="outlet">
-    <ion-router-outlet #outlet [style.min-width]="routerOutletWidth+'px'"></ion-router-outlet>
-  </ion-col>
-</div>
+<umn-page-desktop #desktopPage *ngIf="!isMobile"
+                  [(contentWidthDesktop)]="contentWidthDesktop"
+                  [contentWidthDesktopExpanded]="contentWidthDesktopExpanded"
+                  [widthUnit]="widthUnit"
+                  [isRootPage]="isRootPage">
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</umn-page-desktop>
 
 <umn-page-mobile #mobilePage *ngIf="isMobile"
                  [isRootPage]="isRootPage"

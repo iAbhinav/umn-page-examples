@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from "@angular/core";
-import { PageComponent } from "../page.component";
-import { PageHelper } from "../services/page-helper.service";
+import { PageHelper } from "../../services/page-helper.service";
+import { PageComponent } from "../../page.component";
 
 @Component({
   selector: "umn-page-width-button",
@@ -47,7 +47,9 @@ export class PageWidthButtonComponent {
       return;
     }
     if(this.page?.contentWidthDesktop === this.page.contentWidthDesktopExpanded) {
-      this.page.contentWidthDesktop = this.page.initialContentWidth;
+      if(this.page.desktopPage?.initialContentWidth){
+        this.page.contentWidthDesktop = this.page.desktopPage.initialContentWidth;
+      }
       this.label = this.expandLabel;
       this.icon = this.expandIcon;
     } else {

@@ -1,13 +1,12 @@
-import { Component, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { IonicModule } from "@ionic/angular";
 import { RouterModule } from "@angular/router";
 import { HomeComponent } from "./home.component";
-import { UmunRouterModule } from "../umun-router.module";
 import { PortalModule } from "../portal/portal.module";
-import { AppModule } from "../app.module";
 import { NavBarModule } from "../nav-bar/nav-bar.module";
 import { NavBarItemModule } from "../nav-bar-item/nav-bar-item.module";
+import { PageModule } from "../page/page.module";
 
 @NgModule({
 
@@ -17,7 +16,7 @@ import { NavBarItemModule } from "../nav-bar-item/nav-bar-item.module";
     PortalModule,
     NavBarModule,
     NavBarItemModule,
-    UmunRouterModule.forRoot([
+    RouterModule.forChild([
       {
         path: "",
         component: HomeComponent,
@@ -35,6 +34,10 @@ import { NavBarItemModule } from "../nav-bar-item/nav-bar-item.module";
             loadChildren: () => import("./pay-now/play-now.module").then(m => m.PlayNowModule)
           },
           {
+            path: "explorer",
+            loadChildren: () => import("./finder/explorer.module").then(m => m.FinderModule)
+          },
+          {
             path: "",
             pathMatch: "full",
             redirectTo: "radio"
@@ -42,6 +45,7 @@ import { NavBarItemModule } from "../nav-bar-item/nav-bar-item.module";
         ]
       }
     ]),
+    PageModule
   ],
   exports: [
     RouterModule

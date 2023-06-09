@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { PlayNowComponent } from "./play-now.component";
 import { CoreModule } from "@umun-tech/core";
 import { PageModule } from "../../page/page.module";
+import { EmptyComponent } from "../empty/empty.component";
 
 @NgModule({
   imports: [
@@ -18,7 +19,7 @@ import { PageModule } from "../../page/page.module";
         children: [
           {
             path: "",
-            loadChildren: () => import("./../empty/empty.module").then(m => m.EmptyModule)
+            component: EmptyComponent
           },
           {
             path: "heydio",

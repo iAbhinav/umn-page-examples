@@ -3,9 +3,10 @@ import { BrowserModule } from "@angular/platform-browser";
 
 import { AppComponent } from "./app.component";
 import { NxWelcomeComponent } from "./nx-welcome.component";
-import { RouterModule } from "@angular/router";
+import { RouteReuseStrategy, RouterModule } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ReuseRouteStrategy } from "./page/services/ReuseRouteStrategy";
 
 @NgModule({
   declarations: [
@@ -29,6 +30,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     IonicModule.forRoot({
       mode: "ios"
     })
+  ],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: ReuseRouteStrategy }
   ],
   exports: [
   ],

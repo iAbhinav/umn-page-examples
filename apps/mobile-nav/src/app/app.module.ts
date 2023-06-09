@@ -18,13 +18,13 @@ import { ReuseRouteStrategy } from "./page/services/ReuseRouteStrategy";
     BrowserAnimationsModule,
     RouterModule.forRoot([
       {
-        path: "home",
+        path: "home/place",
         loadChildren: () => import("./home/home.module").then(m => m.HomeModule)
       },
       {
         path: "",
         pathMatch: "full",
-        redirectTo: "home"
+        redirectTo: "home/place"
       }
     ], { useHash: true, initialNavigation: "enabledBlocking" }),
     IonicModule.forRoot({

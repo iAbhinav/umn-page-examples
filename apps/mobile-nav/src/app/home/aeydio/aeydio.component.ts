@@ -17,7 +17,7 @@ import { Component } from "@angular/core";
   <ion-content>
     Hi I am Aeydio
 
-    <ion-item routerLink="/home/play-now/seydio"
+    <ion-item routerLink="/home/place/play-now/seydio"
               routerLinkActive="active"
               queryParamsHandling="merge">
       Play Now

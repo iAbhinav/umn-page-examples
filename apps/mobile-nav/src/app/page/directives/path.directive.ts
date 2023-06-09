@@ -15,12 +15,14 @@ export class PathDirective {
 
   page?: PageComponent;
   @HostBinding("style.color") get color() {
-    let wantsToOpenContentPath = this.page?.contentPath+"/"+this.path+"/"
-    for (const page of PageComponent.stack) {
-      if(page.contentPath == wantsToOpenContentPath) {
-        //do nothing since the page is already in stack
-        this.cdr.markForCheck();
-        return this.activeColor;
+    if(this.page){
+      let wantsToOpenContentPath = this.page?.contentPath+"/"+this.path+"/"
+      for (const page of this.page.stack) {
+        if(page.contentPath == wantsToOpenContentPath) {
+          //do nothing since the page is already in stack
+          this.cdr.markForCheck();
+          return this.activeColor;
+        }
       }
     }
     this.cdr.markForCheck();

@@ -65,7 +65,6 @@ export class BackComponent implements AfterViewInit {
     let currentPath = window.location.href;
     setTimeout(() => {
       if(currentPath == window.location.href) {
-        console.log("back clicked: Through ion-back-button");
         //click back button
         // @ts-ignore
         this.backButton?.el?.click();

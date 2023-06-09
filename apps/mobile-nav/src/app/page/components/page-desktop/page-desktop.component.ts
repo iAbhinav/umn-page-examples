@@ -3,16 +3,15 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, EventEmitter, HostBinding,
-  Input, Output,
-  ViewChild
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output
 } from "@angular/core";
-import { IonRouterOutlet } from "@ionic/angular";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { filter } from "rxjs/operators";
-import { PageHelper } from "../../services/page-helper.service";
 import { PageComponent } from "../../page.component";
 import { fadeInOut } from "../../animations/page.animations";
+import { PageController } from "../../services/page.controller";
 
 @Component({
   selector: "umn-page-desktop",
@@ -51,7 +50,7 @@ export class PageDesktopComponent implements AfterViewInit, AfterContentInit {
     if (!this.initialContentWidth) {
       this.initialContentWidth = value;
     }
-    PageComponent.refreshStack();
+    this.pageController.refreshStack(this.parent?.stack)
     this.cdr.detectChanges();
   }
 
@@ -68,7 +67,9 @@ export class PageDesktopComponent implements AfterViewInit, AfterContentInit {
   private _contentWidthDesktop: number = 400;
 
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,
+              private pageController: PageController,
+              private parent: PageComponent) {
   }
 
   scrollIntoView() {

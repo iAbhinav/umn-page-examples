@@ -20,7 +20,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
       </ion-header>
       <ion-content>
         Hi I am PlayNow
-        <ion-item path="heydio" [params]="{heydioId: 10001}">
+        <ion-item path="heydio/10" [params]="{heydioId: 10001}">
           Heydio
         </ion-item>
 

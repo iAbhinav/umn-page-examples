@@ -1,7 +1,9 @@
-import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from "@angular/core";
 import { PageComponent } from "../../page/page.component";
 import { ExplorerController } from "./explorer.controller";
 import { PageHelper } from "../../page/services/page-helper.service";
+import { ScreenSizeService } from "../../page/services/screen-size.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "explorer-page",
@@ -87,10 +89,10 @@ import { PageHelper } from "../../page/services/page-helper.service";
     `
   ]
 })
-export class ExplorerPageComponent {
+export class ExplorerPageComponent implements OnDestroy{
   type: "icons" | "column" | "gallery" | "list";
+  private screenSizeSubscription: Subscription;
   get isIconsClass() {
-    console.log(this.type === "column", this.type);
     return this.type != "column";
   }
 
@@ -99,8 +101,16 @@ export class ExplorerPageComponent {
 
   constructor(private cdr: ChangeDetectorRef,
               private pageHelper: PageHelper,
+              private screen:ScreenSizeService,
               public explorerController: ExplorerController) {
     this.type = this.pageHelper.isMobile ? "icons" : "column";
+    this.screenSizeSubscription =  this.screen.screenSizeChange$.subscribe(()=>{
+
+      if(this.page){
+      //   this.page.desktopViewType = this.type == 'column'?'column': 'full_screen';
+      //   this.page.onWindowResize(null)
+      }
+    })
   }
 
 
@@ -127,7 +137,16 @@ export class ExplorerPageComponent {
   }
 
   pathChanged(newPath: string) {
-    this.explorerController.path = newPath;
-    this.cdr.detectChanges()
+    if(this.explorerController.path != newPath){
+      console.log("path changed", newPath, this.explorerController.path)
+      this.explorerController.path = newPath;
+      this.cdr.detectChanges()
+    }
+
+
+  }
+
+  ngOnDestroy(): void {
+    this.screenSizeSubscription?.unsubscribe()
   }
 }

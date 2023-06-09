@@ -9,7 +9,7 @@ import { ActivatedRoute } from "@angular/router";
         <umn-nav-bar-item label="Play Now"
                           path="play-now" icon="play-circle">
         </umn-nav-bar-item>
-        <umn-nav-bar-item label="Radio" path="radio" icon="radio">
+        <umn-nav-bar-item label="Finder" path="explorer" icon="compass-outline">
         </umn-nav-bar-item>
       </umn-nav-bar>
     

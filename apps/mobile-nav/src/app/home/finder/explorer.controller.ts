@@ -36,8 +36,8 @@ export class ExplorerController {
 
   async getDirectory(path: string) {
     if (!this.entries){
-      console.warn("ExplorerController: entries not set")
-      return null;
+      // console.warn("ExplorerController: entries not set")
+      return [];
     }
 
     // filter(Boolean) is to ignore empty strings caused by leading/trailing slashes

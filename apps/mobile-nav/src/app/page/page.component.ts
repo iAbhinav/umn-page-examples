@@ -174,6 +174,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
           window.addEventListener("resize", this.onWindowResize.bind(this));
 
         // });
+        this.screenSizeSubscription?.unsubscribe();
        this.screenSizeSubscription = this.screen.screenSizeChange$.subscribe($event => {
           this.onWindowResize($event)
         })
@@ -274,6 +275,7 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
+    this.contentWidthDesktop = 400;
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {

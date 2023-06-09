@@ -44,7 +44,6 @@ export class PageDesktopComponent implements AfterViewInit, AfterContentInit {
   @Input() isRootPage = false;
 
   @Input() set contentWidthDesktop(value: any) {
-    console.log(value)
     if(!value){
       return
     }

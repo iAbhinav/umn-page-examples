@@ -22,7 +22,7 @@ import { EmptyComponent } from "../empty/empty.component";
             component: EmptyComponent
           },
           {
-            path: "heydio",
+            path: "heydio/:id",
             loadChildren: () => import("./../heydio/heydio.module").then(m => m.HeydioModule)
           },
           {

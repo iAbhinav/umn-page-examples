@@ -10,7 +10,6 @@ import { PageHelper } from "../../page/services/page-helper.service";
   ],
   template: `
    <ion-content *ngIf="!isMobile" [@fadeInOut]>
-     
    </ion-content>
   `,
   styles:[

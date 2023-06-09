@@ -246,7 +246,14 @@ export class PageComponent implements AfterViewInit, AfterContentInit, OnDestroy
   onWindowResize(event: any) {
     this.isMobile = this.display.isMobile;
     this.isColumn = !this.isMobile && this.desktopViewType == "column";
-    if (!this.isColumn) {
+    if (this.isColumn) {
+      if(this.desktopPage){
+        this.desktopPage.contentWidthDesktop =this.contentWidthDesktop
+        if(this.isRootPage) {
+          this.desktopPage.scrollIntoView()
+        }
+      }
+    } else {
       this.pageController.getMyRoot(this)?.myStack.forEach(page => {
         page.mobilePage?.setShowOutlet();
       });

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { fadeInOut } from "../../page/animations/page.animations";
-import { PageHelper } from "../../page/services/page-helper.service";
+import { PageHelper } from "@umun-tech/page";
+import { fadeInOut } from "@umun-tech/page";
 
 @Component({
   selector: "app-empty",

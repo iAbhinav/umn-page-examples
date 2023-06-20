@@ -3,7 +3,7 @@ import { IonicModule } from "@ionic/angular";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { DeydioComponent } from "./deydio.component";
-import { PageModule } from "../../page/page.module";
+import { PageModule } from "@umun-tech/page";
 
 @NgModule({
   imports: [

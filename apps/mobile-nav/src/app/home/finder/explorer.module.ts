@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { IonicModule } from "@ionic/angular";
 import { FormsModule } from "@angular/forms";
-import { PageModule } from "../../page/page.module";
+import { PageModule } from "@umun-tech/page";
 import { RouterModule } from "@angular/router";
 import { EmptyComponent } from "../empty/empty.component";
 import { CommonModule } from "@angular/common";

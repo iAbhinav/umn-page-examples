@@ -3,7 +3,7 @@ import { IonicModule } from "@ionic/angular";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { HeydioComponent } from "./heydio.component";
-import { PageModule } from "../../page/page.module";
+import { PageModule } from "@umun-tech/page";
 import { CreateHeydioComponent } from "./create-heydio.component";
 import { UpdateHeydioComponent } from "./update-heydio.component";
 import { FormsModule } from "@angular/forms";

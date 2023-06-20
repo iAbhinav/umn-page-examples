@@ -2,8 +2,8 @@ import { NgModule } from "@angular/core";
 import { IonicModule } from "@ionic/angular";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
-import { PageModule } from "../../page/page.module";
 import { AeydioComponent } from "./aeydio.component";
+import { PageModule } from "@umun-tech/page";
 
 @NgModule({
   imports: [

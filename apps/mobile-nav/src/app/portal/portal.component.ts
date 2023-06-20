@@ -11,7 +11,8 @@ import {
 } from "@angular/core";
 import { NavBarComponent } from "../nav-bar/nav-bar.component";
 import { NavBarItemComponent } from "../nav-bar-item/nav-bar-item.component";
-import { PageHelper } from "../page/services/page-helper.service";
+import { PageHelper } from "@umun-tech/page";
+
 
 @Component({
   selector: "umn-portal",

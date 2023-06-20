@@ -6,7 +6,7 @@ import { NxWelcomeComponent } from "./nx-welcome.component";
 import { RouteReuseStrategy, RouterModule } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ReuseRouteStrategy } from "./page/services/ReuseRouteStrategy";
+import { ReuseRouteStrategy } from "@umun-tech/page";
 
 @NgModule({
   declarations: [

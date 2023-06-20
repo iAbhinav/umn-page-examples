@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from "@angular/core";
-import { PageComponent } from "../../page/page.component";
 import { ExplorerController } from "./explorer.controller";
-import { PageHelper } from "../../page/services/page-helper.service";
-import { ScreenSizeService } from "../../page/services/screen-size.service";
 import { Subscription } from "rxjs";
+import { PageComponent, PageHelper } from "@umun-tech/page";
+import { ScreenSizeService } from "@umun-tech/page";
 
 @Component({
   selector: "explorer-page",

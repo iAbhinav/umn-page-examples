@@ -6,7 +6,7 @@ import { HomeComponent } from "./home.component";
 import { PortalModule } from "../portal/portal.module";
 import { NavBarModule } from "../nav-bar/nav-bar.module";
 import { NavBarItemModule } from "../nav-bar-item/nav-bar-item.module";
-import { PageModule } from "../page/page.module";
+import { PageModule } from "@umun-tech/page";
 
 @NgModule({
 

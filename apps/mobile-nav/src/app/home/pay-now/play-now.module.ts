@@ -4,7 +4,7 @@ import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { PlayNowComponent } from "./play-now.component";
 import { CoreModule } from "@umun-tech/core";
-import { PageModule } from "../../page/page.module";
+import { PageModule } from "@umun-tech/page";
 import { EmptyComponent } from "../empty/empty.component";
 
 @NgModule({

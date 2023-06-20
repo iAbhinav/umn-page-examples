@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 
 @Component({
   selector: "app-playnow",
@@ -18,7 +18,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
           </ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
+      <ion-content #content>
         Hi I am PlayNow
         <ion-item path="heydio/10" [params]="{heydioId: 10001}">
           Heydio
@@ -29,7 +29,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
         </ion-item>
 
       </ion-content>
-      <ion-footer *ngIf="!page?.isMobile" class="umn-page-footer">
+      <ion-footer *ngIf="!page?.isMobile" class="umn-page-footer" [class.abc]="true">
         <ion-toolbar>
           <ion-breadcrumbs slot="start">
             <ion-breadcrumb *ngFor="let p of page?.stack"
@@ -56,7 +56,6 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   ]
 })
 export class PlayNowComponent {
-
 
 
   }

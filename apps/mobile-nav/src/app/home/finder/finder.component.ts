@@ -1,10 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { PageComponent } from "../../page/page.component";
 import { filter } from "rxjs/operators";
-import { PageHelper } from "../../page/services/page-helper.service";
-import { ExplorerPageComponent } from "./explorer.component";
 import { ExplorerController } from "./explorer.controller";
+import { PageComponent, PageHelper } from "@umun-tech/page";
 
 @Component({
   selector: "umn-finder-page",

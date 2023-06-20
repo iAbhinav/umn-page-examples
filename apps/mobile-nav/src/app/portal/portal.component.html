@@ -1,0 +1,32 @@
+<ion-row class="desktop content" *ngIf="isDesktop">
+  <div class="side-bar">
+    <ion-item *ngFor="let item of navItems" detail="none" lines="none" detailIcon=""
+              [routerLink]="item?.childRoute" routerLinkActive="active" [queryParams]="item.params"
+              queryParamsHandling="merge"
+              [routerLinkActiveOptions]="{exact: false}">
+      <ion-icon slot="start" [name]="item?.icon"></ion-icon>
+      <ion-label>{{item?.label}}</ion-label>
+    </ion-item>
+  </div>
+  <ion-col class="outlet">
+    <ion-router-outlet></ion-router-outlet>
+  </ion-col>
+</ion-row>
+
+<div class="mobile content" *ngIf="isMobile">
+  <ion-router-outlet></ion-router-outlet>
+  <ion-footer>
+    <ion-toolbar>
+      <ion-buttons>
+        <ion-button *ngFor="let item of navItems"  class="button"
+                    [routerLink]="item?.childRoute" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}">
+          <ion-icon [name]="item?.icon"></ion-icon>
+          {{item?.label}}
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</div>
+
+<ng-content></ng-content>

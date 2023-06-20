@@ -1,0 +1,77 @@
+:host {
+  --umn-sidebar-background: var(--ion-item-background);
+  --umn-sidebar-item-background: var(--ion-item-background);
+  --umn-sidebar-width: 4rem;
+  --umn-sidebar-width-max: 200px;
+}
+
+
+.desktop.content {
+  display: flex;
+  transition: grid-template-columns 0.5s ease;
+  height: 100vh;
+
+  .side-bar {
+    width: var(--umn-sidebar-width);
+    transition: width 0.5s ease;
+    background-color: var(--umn-sidebar-background);
+
+    &:hover {
+      width: var(--umn-sidebar-width-max);
+
+      ion-item {
+
+        ion-icon {
+          margin: 0px 16px;
+          transition: margin-left 0.5s ease;
+        }
+
+        ion-label {
+          display: block;
+        }
+      }
+    }
+
+    ion-item {
+      --padding-start: 0px;
+      --inner-padding-end: 0px;
+      --ion-item-background: var(--umn-sidebar-item-background);
+
+      ion-icon {
+        margin: 0px calc(var(--umn-sidebar-width) / 4);
+      }
+
+      ion-label {
+        display: none;
+      }
+    }
+  }
+
+
+  .active {
+    --color: var(--ion-color-primary);
+  }
+}
+
+
+.mobile.content {
+  ion-router-outlet {
+    margin-bottom: 44px;
+  }
+
+  ion-footer {
+    position: fixed;
+    bottom: 0;
+
+    .button {
+      --color: var(--ion-color-dark);
+    }
+
+    .active {
+      --color: var(--ion-color-primary);
+    }
+  }
+}
+
+
+

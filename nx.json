@@ -35,7 +35,7 @@
   "cli": {
     "defaultCollection": "@nrwl/angular"
   },
-  "defaultProject": "sample-app",
+  "defaultProject": "insurance-app",
   "generators": {
     "@nrwl/angular": {
       "application": {
